@@ -947,33 +947,84 @@ ERROR_COLOR = (239, 68, 68)  # Modern red
 
 # Enhanced font system optimized for MacBook Air M1 Retina display
 def get_fonts():
-    """Get optimized fonts with better hierarchy for Retina displays"""
+    """Get optimized fonts with better hierarchy and emoji support for Retina displays"""
     try:
-        # Try SF Pro (macOS system font) first, then fallback to Arial
-        # Sizes optimized for Retina display readability
-        title_font = pygame.font.SysFont('SF Pro Display', 40, bold=True)
-        if title_font.get_ascent() < 30:  # Fallback if SF Pro not found
-            title_font = pygame.font.SysFont('Arial', 38, bold=True)
+        # Try to find fonts that support emoji
+        emoji_fonts = ['Apple Color Emoji', 'Segoe UI Emoji', 'Noto Color Emoji', 
+                      'Twemoji', 'Symbola', 'Arial Unicode MS']
+        
+        # Try system fonts with emoji fallback
+        title_font = None
+        for font_name in ['SF Pro Display', 'Arial', 'Helvetica']:
+            try:
+                title_font = pygame.font.SysFont(font_name, 40, bold=True)
+                if title_font.get_ascent() >= 30:
+                    break
+            except:
+                continue
+        
+        if not title_font:
+            title_font = pygame.font.SysFont(None, 44)
             
-        heading_font = pygame.font.SysFont('SF Pro Display', 28, bold=True)
-        if heading_font.get_ascent() < 20:
-            heading_font = pygame.font.SysFont('Arial', 28, bold=True)
+        heading_font = None
+        for font_name in ['SF Pro Display', 'Arial', 'Helvetica']:
+            try:
+                heading_font = pygame.font.SysFont(font_name, 28, bold=True)
+                if heading_font.get_ascent() >= 20:
+                    break
+            except:
+                continue
+        
+        if not heading_font:
+            heading_font = pygame.font.SysFont(None, 32)
             
-        text_font = pygame.font.SysFont('SF Pro Text', 24)
-        if text_font.get_ascent() < 18:
-            text_font = pygame.font.SysFont('Arial', 24)
+        text_font = None
+        for font_name in ['SF Pro Text', 'Arial', 'Helvetica']:
+            try:
+                text_font = pygame.font.SysFont(font_name, 24)
+                if text_font.get_ascent() >= 18:
+                    break
+            except:
+                continue
+        
+        if not text_font:
+            text_font = pygame.font.SysFont(None, 28)
             
-        small_font = pygame.font.SysFont('SF Pro Text', 20)
-        if small_font.get_ascent() < 15:
-            small_font = pygame.font.SysFont('Arial', 20)
+        small_font = None
+        for font_name in ['SF Pro Text', 'Arial', 'Helvetica']:
+            try:
+                small_font = pygame.font.SysFont(font_name, 20)
+                if small_font.get_ascent() >= 15:
+                    break
+            except:
+                continue
+        
+        if not small_font:
+            small_font = pygame.font.SysFont(None, 24)
             
-        button_font = pygame.font.SysFont('SF Pro Display', 22, bold=True)
-        if button_font.get_ascent() < 16:
-            button_font = pygame.font.SysFont('Arial', 22, bold=True)
+        button_font = None
+        for font_name in ['SF Pro Display', 'Arial', 'Helvetica']:
+            try:
+                button_font = pygame.font.SysFont(font_name, 22, bold=True)
+                if button_font.get_ascent() >= 16:
+                    break
+            except:
+                continue
+        
+        if not button_font:
+            button_font = pygame.font.SysFont(None, 26)
             
-        mono_font = pygame.font.SysFont('SF Mono', 20)  # For coordinates and technical text
-        if mono_font.get_ascent() < 15:
-            mono_font = pygame.font.SysFont('Monaco', 20)
+        mono_font = None
+        for font_name in ['SF Mono', 'Monaco', 'Courier New', 'Courier']:
+            try:
+                mono_font = pygame.font.SysFont(font_name, 20)
+                if mono_font.get_ascent() >= 15:
+                    break
+            except:
+                continue
+        
+        if not mono_font:
+            mono_font = pygame.font.SysFont(None, 24)
             
     except:
         # Enhanced fallback fonts with better sizing
@@ -993,18 +1044,91 @@ def get_fonts():
         'mono': mono_font
     }
 
+# Emoji fallback mapping for better compatibility
+EMOJI_FALLBACKS = {
+    '⚙️': '[Settings]',
+    '🤖': '[AI]',
+    '🎯': '[Target]',
+    '🎨': '[Art]',
+    '🎮': '[Game]',
+    '🔄': '[Rotate]',
+    '💾': '[Save]',
+    '✨': '[Animate]',
+    '🔤': '[Text]',
+    '📦': '[Box]',
+    '📝': '[Notes]',
+    '🏆': '[Trophy]',
+    '👑': '[Crown]',
+    '🤝': '[Handshake]',
+    '⚖️': '[Balance]',
+    '▶️': '[Play]',
+    '♟️': '[Pawn]',
+    '♙': '[Pawn]',
+    '⚡': '[Lightning]',
+    '⚠️': '[Warning]',
+    '⚫': '[Black]',
+    '⚪': '[White]'
+}
+
+def safe_font_size(font, text):
+    """Safely get font size for text with emoji fallback support"""
+    try:
+        return font.size(text)
+    except:
+        # Fall back to text replacements for size calculation
+        fallback_text = text
+        for emoji, replacement in EMOJI_FALLBACKS.items():
+            fallback_text = fallback_text.replace(emoji, replacement)
+        return font.size(fallback_text)
+
+def render_text_with_emoji_fallback(font, text, color=(255, 255, 255)):
+    """Render text with emoji fallback support"""
+    try:
+        # First try to render with emojis
+        rendered = font.render(text, True, color)
+        # Check if the text rendered properly by looking at the width
+        expected_width = len(text) * font.size('A')[0] * 0.7  # Rough estimate
+        if rendered.get_width() < expected_width * 0.3:  # If too narrow, emojis likely didn't render
+            raise ValueError("Emojis not rendered properly")
+        return rendered, text
+    except:
+        # Fall back to text replacements
+        fallback_text = text
+        for emoji, replacement in EMOJI_FALLBACKS.items():
+            fallback_text = fallback_text.replace(emoji, replacement)
+        return font.render(fallback_text, True, color), fallback_text
+
 def draw_text_with_shadow(surface, font, text, color, x, y, shadow_color=(0, 0, 0, 80), shadow_offset=2):
-    """Draw text with enhanced shadow for Retina display clarity"""
-    # Create shadow with alpha blending for smoother appearance
-    shadow_surface = pygame.Surface(font.size(text), pygame.SRCALPHA)
-    shadow_text = font.render(text, True, shadow_color)
-    shadow_surface.blit(shadow_text, (0, 0))
-    surface.blit(shadow_surface, (x + shadow_offset, y + shadow_offset))
-    
-    # Draw main text with anti-aliasing
-    main_text = font.render(text, True, color)
-    surface.blit(main_text, (x, y))
-    return main_text.get_rect(x=x, y=y)
+    """Draw text with enhanced shadow and emoji fallback support for Retina display clarity"""
+    try:
+        # Try rendering with emoji support first
+        main_text, rendered_text = render_text_with_emoji_fallback(font, text, color)
+        
+        # Create shadow
+        shadow_text, _ = render_text_with_emoji_fallback(font, rendered_text, shadow_color)
+        shadow_surface = pygame.Surface(main_text.get_size(), pygame.SRCALPHA)
+        shadow_surface.blit(shadow_text, (0, 0))
+        surface.blit(shadow_surface, (x + shadow_offset, y + shadow_offset))
+        
+        # Draw main text
+        surface.blit(main_text, (x, y))
+        return main_text.get_rect(x=x, y=y)
+    except:
+        # Final fallback to basic rendering
+        clean_text = text
+        for emoji, replacement in EMOJI_FALLBACKS.items():
+            clean_text = clean_text.replace(emoji, replacement)
+        
+        # Create shadow with alpha blending for smoother appearance
+        shadow_surface = pygame.Surface(font.size(clean_text), pygame.SRCALPHA)
+        shadow_text = font.render(clean_text, True, shadow_color)
+        shadow_surface.blit(shadow_text, (0, 0))
+        surface.blit(shadow_surface, (x + shadow_offset, y + shadow_offset))
+        
+        # Draw main text with anti-aliasing
+        main_text = font.render(clean_text, True, color)
+        surface.blit(main_text, (x, y))
+        return main_text.get_rect(x=x, y=y)
 
 def load_piece_images():
     images = {}
@@ -1426,15 +1550,15 @@ def draw_enhanced_menu(screen, settings, ai_settings, font, mouse_pos):
     # Header accent line
     pygame.draw.line(screen, (255, 255, 255, 100), (0, 85), (WIDTH, 85), 2)
     
-    # Modern title with better positioning
+    # Modern title with better positioning and emoji fallback support
     title_text = "⚙️ Settings"
-    title_width = fonts['title'].size(title_text)[0]
+    title_width = safe_font_size(fonts['title'], title_text)[0]
     draw_text_with_shadow(screen, fonts['title'], title_text, 
                          (255, 255, 255), WIDTH//2 - title_width//2, 20, (0, 0, 0, 120), 3)
     
     # Subtitle with better contrast
     subtitle_text = "Configure your chess experience"
-    subtitle_width = fonts['text'].size(subtitle_text)[0]
+    subtitle_width = safe_font_size(fonts['text'], subtitle_text)[0]
     draw_text_with_shadow(screen, fonts['text'], subtitle_text, 
                          (220, 220, 235), WIDTH//2 - subtitle_width//2, 55, (0, 0, 0, 100), 2)
     
@@ -1801,16 +1925,16 @@ def draw_side_panel(screen, settings, captured_white, captured_black, move_histo
     draw_text_with_shadow(screen, fonts['heading'], status_icon, status_color, icon_x, status_y + 5, (0, 0, 0, 100), 2)
     
     text_x = icon_x + 35
-    if fonts['text'].size(status_text)[0] > SIDE_PANEL_WIDTH - 60:
-        while fonts['text'].size(status_text)[0] > SIDE_PANEL_WIDTH - 60 and len(status_text) > 8:
+    if safe_font_size(fonts['text'], status_text)[0] > SIDE_PANEL_WIDTH - 60:
+        while safe_font_size(fonts['text'], status_text)[0] > SIDE_PANEL_WIDTH - 60 and len(status_text) > 8:
             status_text = status_text[:-1]
         status_text += "..."
     
     draw_text_with_shadow(screen, fonts['text'], status_text, status_color, text_x, status_y + 8, (0, 0, 0, 100), 2)
     
     # Subtitle with better spacing
-    if fonts['small'].size(subtitle)[0] > SIDE_PANEL_WIDTH - 60:
-        while fonts['small'].size(subtitle)[0] > SIDE_PANEL_WIDTH - 60 and len(subtitle) > 5:
+    if safe_font_size(fonts['small'], subtitle)[0] > SIDE_PANEL_WIDTH - 60:
+        while safe_font_size(fonts['small'], subtitle)[0] > SIDE_PANEL_WIDTH - 60 and len(subtitle) > 5:
             subtitle = subtitle[:-1]
         subtitle += "..."
     
@@ -2064,7 +2188,7 @@ def draw_top_banner(screen, font, message, is_game_over=False):
 
     # Main title with enhanced styling and better shadow
     title_text = f"  {message}  "
-    title_width = fonts['title'].size(title_text)[0]
+    title_width = safe_font_size(fonts['title'], title_text)[0]
     draw_text_with_shadow(screen, fonts['title'], title_text, 
                          (255, 255, 255), WIDTH//2 - title_width//2, 15, (0, 0, 0), 3)
 
@@ -2078,7 +2202,7 @@ def draw_top_banner(screen, font, message, is_game_over=False):
     
     # Better subtitle positioning and shadow
     draw_text_with_shadow(screen, fonts['text'], subtitle, subtitle_color, 
-                         WIDTH // 2 - fonts['text'].size(subtitle)[0] // 2, 65, (0, 0, 0), 2)
+                         WIDTH // 2 - safe_font_size(fonts['text'], subtitle)[0] // 2, 65, (0, 0, 0), 2)
 
 def draw_bottom_panel(screen, font, board, ai, settings):
     """Enhanced bottom panel with better readability and contrast"""
@@ -2107,14 +2231,14 @@ def draw_bottom_panel(screen, font, board, ai, settings):
                     (WIDTH, BOARD_HEIGHT + BOARD_Y_OFFSET), 4)
 
     # Main turn message with subtle shadow for better readability
-    turn_width = fonts['heading'].size(turn_message)[0]
+    turn_width = safe_font_size(fonts['heading'], turn_message)[0]
     draw_text_with_shadow(screen, fonts['heading'], turn_message, text_color, 
                          WIDTH//2 - turn_width//2, 
                          BOARD_HEIGHT + BOARD_Y_OFFSET + 12, (0, 0, 0), 1)
     
     # Subtitle with better contrast and shadow
     subtitle_color = tuple(max(0, c - 60) for c in text_color)  # Darker version of text color
-    subtitle_width = fonts['text'].size(subtitle)[0]
+    subtitle_width = safe_font_size(fonts['text'], subtitle)[0]
     draw_text_with_shadow(screen, fonts['text'], subtitle, subtitle_color,
                          WIDTH//2 - subtitle_width//2, 
                          BOARD_HEIGHT + BOARD_Y_OFFSET + 45, (0, 0, 0), 2)
@@ -2122,7 +2246,7 @@ def draw_bottom_panel(screen, font, board, ai, settings):
     # Check warning with enhanced visibility
     if board.is_check() and not board.is_game_over():
         check_text = "⚠️ CHECK!"
-        check_width = fonts['text'].size(check_text)[0]
+        check_width = safe_font_size(fonts['text'], check_text)[0]
         draw_text_with_shadow(screen, fonts['text'], check_text, ERROR_COLOR, 
                              WIDTH//2 - check_width//2, 
                              BOARD_HEIGHT + BOARD_Y_OFFSET + 70, (0, 0, 0), 3)
@@ -2326,7 +2450,7 @@ def main():
                     if not game_recorded and len(ai.current_game_moves) > 0:
                         ai.end_game(completed=False)
                     running = False
-                elif event.key == pygame.K_m:
+                elif event.key == pygame.K_m or event.key == ord('m'):  # Handle both pygame constant and ASCII
                     game_state = "menu" if game_state == "playing" else "playing"
                 elif event.key == pygame.K_r and board.is_game_over():
                     board, selected_square, game_recorded, player_color, last_ai_move, move_history = reset_game(board, ai, player_color, settings)
