@@ -44,7 +44,7 @@ GAME_SETTINGS = {
     'board_flipped': False,
     'sound_enabled': False,
     'auto_save': True,
-    'move_delay': 0.3
+    'move_delay': 0.2  # Reduced for faster gameplay
 }
 
 # --- Persistent Player Model ---
@@ -160,76 +160,558 @@ class PlayerModel:
             except Exception as e:
                 print(f"Error during format conversion: {e}")
 
-# --- Minimax and Evaluation ---
+# --- Enhanced Chess Engine with Advanced Optimizations ---
+
+# Piece values with enhanced endgame considerations
 PIECE_VALUES = {
     chess.PAWN: 100,
     chess.KNIGHT: 320,
     chess.BISHOP: 330,
     chess.ROOK: 500,
     chess.QUEEN: 900,
-    chess.KING: 10000
+    chess.KING: 20000
 }
 
-def evaluate_board(board, aggressivity_factor=1.0):
-    if board.is_checkmate():
-        if board.turn:
-            return -99999
-        else:
-            return 99999
-    if board.is_stalemate() or board.is_insufficient_material():
-        return 0
-    value = 0
-    for square in chess.SQUARES:
-        piece = board.piece_at(square)
-        if piece:
-            sign = 1 if piece.color == chess.WHITE else -1
-            value += sign * PIECE_VALUES[piece.piece_type]
-    for move in board.legal_moves:
-        if board.is_capture(move):
-            captured = board.piece_at(move.to_square)
-            if captured:
-                value += (PIECE_VALUES[captured.piece_type] // 10) * (1 if board.turn == chess.WHITE else -1)
-        attacked = board.attackers(not board.turn, move.to_square)
-        if attacked:
-            value += (2 * aggressivity_factor) * (1 if board.turn == chess.WHITE else -1)
-    return value
+# Piece-Square Tables for positional evaluation
+# Pawn table (White perspective, black will be flipped)
+PAWN_TABLE = [
+    0,  0,  0,  0,  0,  0,  0,  0,
+   50, 50, 50, 50, 50, 50, 50, 50,
+   10, 10, 20, 30, 30, 20, 10, 10,
+    5,  5, 10, 25, 25, 10,  5,  5,
+    0,  0,  0, 20, 20,  0,  0,  0,
+    5, -5,-10,  0,  0,-10, -5,  5,
+    5, 10, 10,-20,-20, 10, 10,  5,
+    0,  0,  0,  0,  0,  0,  0,  0
+]
 
-def minimax(board, depth, alpha, beta, maximizing, player_model=None, move_number=0, aggressivity_factor=1.0):
-    if depth == 0 or board.is_game_over():
-        return evaluate_board(board, aggressivity_factor), None
-    best_move = None
-    if maximizing:
-        max_eval = -float('inf')
-        for move in board.legal_moves:
+# Knight table
+KNIGHT_TABLE = [
+   -50,-40,-30,-30,-30,-30,-40,-50,
+   -40,-20,  0,  0,  0,  0,-20,-40,
+   -30,  0, 10, 15, 15, 10,  0,-30,
+   -30,  5, 15, 20, 20, 15,  5,-30,
+   -30,  0, 15, 20, 20, 15,  0,-30,
+   -30,  5, 10, 15, 15, 10,  5,-30,
+   -40,-20,  0,  5,  5,  0,-20,-40,
+   -50,-40,-30,-30,-30,-30,-40,-50
+]
+
+# Bishop table
+BISHOP_TABLE = [
+   -20,-10,-10,-10,-10,-10,-10,-20,
+   -10,  0,  0,  0,  0,  0,  0,-10,
+   -10,  0,  5, 10, 10,  5,  0,-10,
+   -10,  5,  5, 10, 10,  5,  5,-10,
+   -10,  0, 10, 10, 10, 10,  0,-10,
+   -10, 10, 10, 10, 10, 10, 10,-10,
+   -10,  5,  0,  0,  0,  0,  5,-10,
+   -20,-10,-10,-10,-10,-10,-10,-20
+]
+
+# Rook table
+ROOK_TABLE = [
+    0,  0,  0,  0,  0,  0,  0,  0,
+    5, 10, 10, 10, 10, 10, 10,  5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+   -5,  0,  0,  0,  0,  0,  0, -5,
+    0,  0,  0,  5,  5,  0,  0,  0
+]
+
+# Queen table
+QUEEN_TABLE = [
+   -20,-10,-10, -5, -5,-10,-10,-20,
+   -10,  0,  0,  0,  0,  0,  0,-10,
+   -10,  0,  5,  5,  5,  5,  0,-10,
+    -5,  0,  5,  5,  5,  5,  0, -5,
+     0,  0,  5,  5,  5,  5,  0, -5,
+   -10,  5,  5,  5,  5,  5,  0,-10,
+   -10,  0,  5,  0,  0,  0,  0,-10,
+   -20,-10,-10, -5, -5,-10,-10,-20
+]
+
+# King middle game table
+KING_MG_TABLE = [
+   -30,-40,-40,-50,-50,-40,-40,-30,
+   -30,-40,-40,-50,-50,-40,-40,-30,
+   -30,-40,-40,-50,-50,-40,-40,-30,
+   -30,-40,-40,-50,-50,-40,-40,-30,
+   -20,-30,-30,-40,-40,-30,-30,-20,
+   -10,-20,-20,-20,-20,-20,-20,-10,
+    20, 20,  0,  0,  0,  0, 20, 20,
+    20, 30, 10,  0,  0, 10, 30, 20
+]
+
+# King endgame table
+KING_EG_TABLE = [
+   -50,-40,-30,-20,-20,-30,-40,-50,
+   -30,-20,-10,  0,  0,-10,-20,-30,
+   -30,-10, 20, 30, 30, 20,-10,-30,
+   -30,-10, 30, 40, 40, 30,-10,-30,
+   -30,-10, 30, 40, 40, 30,-10,-30,
+   -30,-10, 20, 30, 30, 20,-10,-30,
+   -30,-30,  0,  0,  0,  0,-30,-30,
+   -50,-30,-30,-30,-30,-30,-30,-50
+]
+
+PIECE_SQUARE_TABLES = {
+    chess.PAWN: PAWN_TABLE,
+    chess.KNIGHT: KNIGHT_TABLE,
+    chess.BISHOP: BISHOP_TABLE,
+    chess.ROOK: ROOK_TABLE,
+    chess.QUEEN: QUEEN_TABLE,
+    chess.KING: KING_MG_TABLE  # Will switch to EG in endgame
+}
+
+# Transposition Table Entry
+class TTEntry:
+    def __init__(self, depth, score, flag, best_move=None):
+        self.depth = depth
+        self.score = score
+        self.flag = flag  # EXACT, LOWER_BOUND, UPPER_BOUND
+        self.best_move = best_move
+
+# Transposition Table Flags
+TT_EXACT = 0
+TT_LOWER_BOUND = 1
+TT_UPPER_BOUND = 2
+
+# Enhanced Chess AI with all optimizations
+class OptimizedChessEngine:
+    def __init__(self):
+        self.transposition_table = {}
+        self.killer_moves = [[] for _ in range(20)]  # Killer moves for each depth
+        self.history_table = defaultdict(int)  # History heuristic
+        self.nodes_searched = 0
+        self.tt_hits = 0
+        
+    def clear_cache(self):
+        """Clear search caches"""
+        self.transposition_table.clear()
+        self.killer_moves = [[] for _ in range(20)]
+        self.history_table.clear()
+        
+    def get_piece_square_value(self, piece, square, is_endgame=False):
+        """Get piece-square table value"""
+        piece_type = piece.piece_type
+        color = piece.color
+        
+        if piece_type == chess.KING and is_endgame:
+            table = KING_EG_TABLE
+        else:
+            table = PIECE_SQUARE_TABLES.get(piece_type, [0] * 64)
+        
+        # For black pieces, flip the square
+        if color == chess.BLACK:
+            square = square ^ 56  # Flip rank
+            
+        return table[square]
+    
+    def is_endgame(self, board):
+        """Enhanced endgame detection"""
+        piece_count = len(board.piece_map())
+        if piece_count <= 10:
+            return True
+            
+        # Check if queens are off the board
+        queens = len([p for p in board.piece_map().values() if p.piece_type == chess.QUEEN])
+        if queens == 0:
+            return True
+            
+        # Check for light piece endgames
+        major_pieces = len([p for p in board.piece_map().values() 
+                          if p.piece_type in [chess.QUEEN, chess.ROOK]])
+        if major_pieces <= 2:
+            return True
+            
+        return False
+    
+    def evaluate_board(self, board, aggressivity_factor=1.0):
+        """Enhanced evaluation function with piece-square tables and positional factors"""
+        if board.is_checkmate():
+            return -30000 if board.turn else 30000
+        if board.is_stalemate() or board.is_insufficient_material():
+            return 0
+            
+        is_endgame = self.is_endgame(board)
+        material_score = 0
+        positional_score = 0
+        
+        # Material and positional evaluation
+        for square in chess.SQUARES:
+            piece = board.piece_at(square)
+            if piece:
+                # Material value
+                piece_value = PIECE_VALUES[piece.piece_type]
+                
+                # Piece-square bonus
+                positional_bonus = self.get_piece_square_value(piece, square, is_endgame)
+                
+                if piece.color == chess.WHITE:
+                    material_score += piece_value
+                    positional_score += positional_bonus
+                else:
+                    material_score -= piece_value
+                    positional_score -= positional_bonus
+        
+        # Mobility and tactical bonuses
+        mobility_score = 0
+        current_turn = board.turn
+        
+        # White mobility
+        board.turn = chess.WHITE
+        white_mobility = len(list(board.legal_moves))
+        
+        # Black mobility  
+        board.turn = chess.BLACK
+        black_mobility = len(list(board.legal_moves))
+        
+        board.turn = current_turn
+        mobility_score = (white_mobility - black_mobility) * 10
+        
+        # Center control bonus
+        center_squares = [chess.D4, chess.D5, chess.E4, chess.E5]
+        extended_center = [chess.C3, chess.C4, chess.C5, chess.C6,
+                          chess.D3, chess.D6, chess.E3, chess.E6,
+                          chess.F3, chess.F4, chess.F5, chess.F6]
+        
+        center_control = 0
+        for square in center_squares:
+            piece = board.piece_at(square)
+            if piece:
+                value = 20 if piece.color == chess.WHITE else -20
+                center_control += value
+                
+        for square in extended_center:
+            piece = board.piece_at(square)
+            if piece:
+                value = 10 if piece.color == chess.WHITE else -10
+                center_control += value
+        
+        # King safety (more important in middlegame)
+        king_safety = 0
+        if not is_endgame:
+            white_king = board.king(chess.WHITE)
+            black_king = board.king(chess.BLACK)
+            
+            if white_king:
+                white_king_attackers = len(board.attackers(chess.BLACK, white_king))
+                king_safety -= white_king_attackers * 30
+                
+            if black_king:
+                black_king_attackers = len(board.attackers(chess.WHITE, black_king))
+                king_safety += black_king_attackers * 30
+        
+        # Pawn structure bonuses
+        pawn_structure = self.evaluate_pawn_structure(board)
+        
+        total_score = (material_score + 
+                      positional_score + 
+                      mobility_score + 
+                      center_control + 
+                      king_safety + 
+                      pawn_structure)
+        
+        # Apply aggressivity factor
+        if aggressivity_factor != 1.0:
+            tactical_bonus = (mobility_score + king_safety) * (aggressivity_factor - 1.0)
+            total_score += tactical_bonus
+            
+        return total_score
+    
+    def evaluate_pawn_structure(self, board):
+        """Evaluate pawn structure"""
+        score = 0
+        white_pawns = []
+        black_pawns = []
+        
+        # Collect pawn positions
+        for square in chess.SQUARES:
+            piece = board.piece_at(square)
+            if piece and piece.piece_type == chess.PAWN:
+                if piece.color == chess.WHITE:
+                    white_pawns.append(square)
+                else:
+                    black_pawns.append(square)
+        
+        # Doubled pawns penalty
+        white_files = [chess.square_file(sq) for sq in white_pawns]
+        black_files = [chess.square_file(sq) for sq in black_pawns]
+        
+        for file in range(8):
+            white_count = white_files.count(file)
+            black_count = black_files.count(file)
+            if white_count > 1:
+                score -= (white_count - 1) * 20
+            if black_count > 1:
+                score += (black_count - 1) * 20
+        
+        # Isolated pawns penalty
+        for pawn_sq in white_pawns:
+            file = chess.square_file(pawn_sq)
+            adjacent_files = [file - 1, file + 1]
+            has_support = any(chess.square_file(sq) in adjacent_files for sq in white_pawns)
+            if not has_support:
+                score -= 25
+                
+        for pawn_sq in black_pawns:
+            file = chess.square_file(pawn_sq)
+            adjacent_files = [file - 1, file + 1]
+            has_support = any(chess.square_file(sq) in adjacent_files for sq in black_pawns)
+            if not has_support:
+                score += 25
+        
+        # Passed pawns bonus
+        for pawn_sq in white_pawns:
+            if self.is_passed_pawn(board, pawn_sq, chess.WHITE):
+                rank = chess.square_rank(pawn_sq)
+                score += (rank - 1) * 20  # More valuable closer to promotion
+                
+        for pawn_sq in black_pawns:
+            if self.is_passed_pawn(board, pawn_sq, chess.BLACK):
+                rank = chess.square_rank(pawn_sq)
+                score -= (6 - rank) * 20  # More valuable closer to promotion
+        
+        return score
+    
+    def is_passed_pawn(self, board, pawn_square, color):
+        """Check if pawn is passed"""
+        file = chess.square_file(pawn_square)
+        rank = chess.square_rank(pawn_square)
+        
+        # Check files in front of pawn
+        check_files = [file - 1, file, file + 1]
+        check_files = [f for f in check_files if 0 <= f <= 7]
+        
+        if color == chess.WHITE:
+            check_ranks = range(rank + 1, 8)
+        else:
+            check_ranks = range(0, rank)
+            
+        for check_rank in check_ranks:
+            for check_file in check_files:
+                square = chess.square(check_file, check_rank)
+                piece = board.piece_at(square)
+                if piece and piece.piece_type == chess.PAWN and piece.color != color:
+                    return False
+        return True
+    
+    def order_moves(self, board, moves, best_move=None, depth=0):
+        """Enhanced move ordering for better alpha-beta pruning"""
+        move_scores = []
+        
+        for move in moves:
+            score = 0
+            
+            # Best move from transposition table gets highest priority
+            if best_move and move == best_move:
+                score += 10000
+                
+            # Captures - use MVV-LVA (Most Valuable Victim - Least Valuable Attacker)
+            if board.is_capture(move):
+                captured_piece = board.piece_at(move.to_square)
+                attacking_piece = board.piece_at(move.from_square)
+                if captured_piece and attacking_piece:
+                    score += PIECE_VALUES[captured_piece.piece_type] * 10
+                    score -= PIECE_VALUES[attacking_piece.piece_type]
+            
+            # Promotions
+            if move.promotion:
+                score += PIECE_VALUES[move.promotion] * 8
+                
+            # Checks
             board.push(move)
-            eval, _ = minimax(board, depth - 1, alpha, beta, False, player_model, move_number + 1, aggressivity_factor)
+            if board.is_check():
+                score += 500
             board.pop()
-            if player_model:
+            
+            # Killer moves
+            if depth < len(self.killer_moves):
+                if move in self.killer_moves[depth]:
+                    score += 100
+                    
+            # History heuristic
+            score += self.history_table[move.uci()]
+            
+            # Castling bonus
+            if board.is_castling(move):
+                score += 300
+                
+            move_scores.append((move, score))
+        
+        # Sort by score (descending)
+        move_scores.sort(key=lambda x: x[1], reverse=True)
+        return [move for move, score in move_scores]
+    
+    def store_killer_move(self, move, depth):
+        """Store killer move"""
+        if depth < len(self.killer_moves):
+            if move not in self.killer_moves[depth]:
+                self.killer_moves[depth].append(move)
+                if len(self.killer_moves[depth]) > 2:  # Keep only 2 killer moves per depth
+                    self.killer_moves[depth].pop(0)
+    
+    def minimax_optimized(self, board, depth, alpha, beta, maximizing, 
+                         player_model=None, move_number=0, aggressivity_factor=1.0):
+        """Optimized minimax with all enhancements"""
+        self.nodes_searched += 1
+        original_alpha = alpha
+        
+        # Transposition table lookup
+        board_hash = hash(str(board))
+        if board_hash in self.transposition_table:
+            tt_entry = self.transposition_table[board_hash]
+            if tt_entry.depth >= depth:
+                self.tt_hits += 1
+                if tt_entry.flag == TT_EXACT:
+                    return tt_entry.score, tt_entry.best_move
+                elif tt_entry.flag == TT_LOWER_BOUND:
+                    alpha = max(alpha, tt_entry.score)
+                elif tt_entry.flag == TT_UPPER_BOUND:
+                    beta = min(beta, tt_entry.score)
+                    
+                if alpha >= beta:
+                    return tt_entry.score, tt_entry.best_move
+        
+        # Terminal node evaluation
+        if depth == 0 or board.is_game_over():
+            score = self.evaluate_board(board, aggressivity_factor)
+            return score, None
+        
+        best_move = None
+        best_score = -float('inf') if maximizing else float('inf')
+        
+        # Get best move from transposition table for move ordering
+        tt_best_move = None
+        if board_hash in self.transposition_table:
+            tt_best_move = self.transposition_table[board_hash].best_move
+        
+        # Move ordering
+        legal_moves = list(board.legal_moves)
+        ordered_moves = self.order_moves(board, legal_moves, tt_best_move, depth)
+        
+        moves_searched = 0
+        for move in ordered_moves:
+            board.push(move)
+            
+            # Player pattern counter-strategy
+            move_score_adjustment = 0
+            if player_model and not maximizing:  # AI is typically not maximizing (playing as black)
                 common_opening = player_model.most_common_opening(move_number)
                 if common_opening and move.uci() == common_opening:
-                    eval -= 30
-            if eval > max_eval:
-                max_eval = eval
-                best_move = move
-            alpha = max(alpha, eval)
-            if beta <= alpha:
-                break
-        return max_eval, best_move
-    else:
-        min_eval = float('inf')
-        for move in board.legal_moves:
-            board.push(move)
-            eval, _ = minimax(board, depth - 1, alpha, beta, True, player_model, move_number + 1, aggressivity_factor)
+                    move_score_adjustment = -50  # Penalty for predictable moves
+            
+            if maximizing:
+                score, _ = self.minimax_optimized(board, depth - 1, alpha, beta, False, 
+                                                player_model, move_number + 1, aggressivity_factor)
+                score += move_score_adjustment
+                
+                if score > best_score:
+                    best_score = score
+                    best_move = move
+                    
+                alpha = max(alpha, score)
+            else:
+                score, _ = self.minimax_optimized(board, depth - 1, alpha, beta, True, 
+                                                player_model, move_number + 1, aggressivity_factor)
+                score += move_score_adjustment
+                
+                if score < best_score:
+                    best_score = score
+                    best_move = move
+                    
+                beta = min(beta, score)
+            
             board.pop()
-            if eval < min_eval:
-                min_eval = eval
-                best_move = move
-            beta = min(beta, eval)
-            if beta <= alpha:
+            moves_searched += 1
+            
+            # Alpha-beta pruning
+            if alpha >= beta:
+                # Store killer move
+                if not board.is_capture(move):
+                    self.store_killer_move(move, depth)
+                # Update history table
+                self.history_table[move.uci()] += depth * depth
                 break
-        return min_eval, best_move
+        
+        # Store in transposition table
+        tt_flag = TT_EXACT
+        if best_score <= original_alpha:
+            tt_flag = TT_UPPER_BOUND
+        elif best_score >= beta:
+            tt_flag = TT_LOWER_BOUND
+            
+        self.transposition_table[board_hash] = TTEntry(depth, best_score, tt_flag, best_move)
+        
+        # Limit transposition table size
+        if len(self.transposition_table) > 100000:
+            # Remove random entries (simple cleanup)
+            keys_to_remove = list(self.transposition_table.keys())[:10000]
+            for key in keys_to_remove:
+                del self.transposition_table[key]
+        
+        return best_score, best_move
+    
+    def iterative_deepening_search(self, board, max_depth, time_limit=None, 
+                                  player_model=None, move_number=0, aggressivity_factor=1.0):
+        """Iterative deepening with time management"""
+        start_time = time.time()
+        best_move = None
+        best_score = 0
+        
+        for depth in range(1, max_depth + 1):
+            if time_limit and (time.time() - start_time) > time_limit:
+                break
+                
+            self.nodes_searched = 0
+            self.tt_hits = 0
+            
+            try:
+                score, move = self.minimax_optimized(
+                    board, depth, -float('inf'), float('inf'), 
+                    board.turn == chess.WHITE, player_model, move_number, aggressivity_factor
+                )
+                
+                if move:
+                    best_move = move
+                    best_score = score
+                    
+                # Debug info
+                elapsed = time.time() - start_time
+                print(f"Depth {depth}: Score {score}, Move {move}, "
+                      f"Nodes {self.nodes_searched}, TT hits {self.tt_hits}, "
+                      f"Time {elapsed:.2f}s")
+                      
+            except Exception as e:
+                print(f"Error at depth {depth}: {e}")
+                break
+                
+            # If we found a mate, no need to search deeper
+            if abs(best_score) > 25000:
+                break
+        
+        return best_score, best_move
 
-# --- Adaptive AI ---
+# Create global engine instance
+engine = OptimizedChessEngine()
+
+def evaluate_board(board, aggressivity_factor=1.0):
+    """Wrapper function for compatibility"""
+    return engine.evaluate_board(board, aggressivity_factor)
+
+def minimax(board, depth, alpha, beta, maximizing, player_model=None, move_number=0, aggressivity_factor=1.0):
+    """Wrapper function for compatibility"""
+    return engine.minimax_optimized(board, depth, alpha, beta, maximizing, 
+                                   player_model, move_number, aggressivity_factor)
+
+# --- Adaptive AI with Enhanced Engine ---
+
+# --- Minimax and Evaluation ---
+
+# --- Enhanced Adaptive AI with Optimized Engine ---
 class AdvancedAdaptiveChessAI:
     def __init__(self, player_model, search_depth=3, aggressivity_factor=1.0):
         self.player_model = player_model
@@ -239,32 +721,142 @@ class AdvancedAdaptiveChessAI:
         self.thinking = False
         self.ai_move = None
         self.thinking_thread = None
-
-    def is_endgame(self, board):
-        """
-        Determines if the game is in the endgame.
-        Considers it an endgame if the total number of pieces on the board is less than 10.
-        """
-        return len(board.piece_map()) < 10
+        self.engine = engine  # Use the global optimized engine
+        self.last_search_time = 0
+        self.adaptive_depth = search_depth
+        self.position_history = []  # Track position repetitions
+        
+    def get_adaptive_depth(self, board):
+        """Dynamically adjust search depth based on game phase and complexity"""
+        base_depth = self.search_depth
+        
+        # Endgame gets deeper search
+        if self.engine.is_endgame(board):
+            return min(base_depth + 2, 8)
+        
+        # Opening gets standard depth
+        if board.fullmove_number <= 10:
+            return base_depth
+        
+        # Complex middle game positions get deeper search
+        legal_moves = len(list(board.legal_moves))
+        if legal_moves > 35:  # Complex position
+            return max(base_depth - 1, 2)
+        elif legal_moves < 20:  # Simplified position
+            return min(base_depth + 1, 7)
+            
+        return base_depth
+    
+    def get_time_limit(self, board):
+        """Get appropriate time limit for the current position"""
+        base_time = 2.0  # 2 seconds base time
+        
+        # Less time in opening
+        if board.fullmove_number <= 10:
+            return base_time * 0.5
+            
+        # More time for critical positions
+        if board.is_check():
+            return base_time * 1.5
+            
+        # More time in endgame
+        if self.engine.is_endgame(board):
+            return base_time * 1.2
+            
+        # More time for complex positions
+        legal_moves = len(list(board.legal_moves))
+        if legal_moves > 35:
+            return base_time * 0.8  # Less time for complex positions to avoid timeout
+        elif legal_moves < 15:
+            return base_time * 1.3  # More time for critical positions
+            
+        return base_time
 
     def record_player_move(self, move):
         self.current_game_moves.append(move)
 
+    def detect_repetition(self, board):
+        """Detect if we're heading toward a repetition"""
+        position_key = str(board)
+        self.position_history.append(position_key)
+        
+        # Keep only last 20 positions
+        if len(self.position_history) > 20:
+            self.position_history.pop(0)
+            
+        # Count occurrences of current position
+        count = self.position_history.count(position_key)
+        return count >= 2
+
     def calculate_move(self, board_copy):
         try:
-            current_depth = self.search_depth
-            if self.is_endgame(board_copy):
-                current_depth = 5
+            start_time = time.time()
+            
+            # Clear engine caches periodically to prevent memory issues
+            if len(self.current_game_moves) % 20 == 0:
+                self.engine.clear_cache()
+            
+            # Get adaptive depth and time limit
+            max_depth = self.get_adaptive_depth(board_copy)
+            time_limit = self.get_time_limit(board_copy)
+            
+            print(f"AI thinking: Depth {max_depth}, Time limit {time_limit}s")
+            
+            # Use iterative deepening search
+            _, best_move = self.engine.iterative_deepening_search(
+                board_copy, 
+                max_depth, 
+                time_limit,
+                self.player_model, 
+                board_copy.fullmove_number - 1, 
+                self.aggressivity_factor
+            )
 
-            _, best_move = minimax(board_copy, current_depth, -float('inf'), float('inf'), board_copy.turn == chess.WHITE, self.player_model, board_copy.fullmove_number - 1, self.aggressivity_factor)
+            # Fallback to simple minimax if iterative deepening fails
+            if not best_move:
+                print("Fallback to simple minimax")
+                _, best_move = self.engine.minimax_optimized(
+                    board_copy, 
+                    min(max_depth, 4), 
+                    -float('inf'), 
+                    float('inf'), 
+                    board_copy.turn == chess.WHITE, 
+                    self.player_model, 
+                    board_copy.fullmove_number - 1, 
+                    self.aggressivity_factor
+                )
 
             if best_move:
+                # Check for repetition avoidance
+                if self.detect_repetition(board_copy):
+                    # Try to find a different move if we're repeating
+                    legal_moves = list(board_copy.legal_moves)
+                    if len(legal_moves) > 1:
+                        legal_moves.remove(best_move)
+                        # Quick evaluation of alternative moves
+                        alternative_move = random.choice(legal_moves)
+                        print(f"Avoiding repetition, chose alternative: {alternative_move}")
+                        best_move = alternative_move
+                
                 self.ai_move = best_move
+                self.last_search_time = time.time() - start_time
+                print(f"AI found move: {best_move} in {self.last_search_time:.2f}s")
             else:
-                self.ai_move = random.choice(list(board_copy.legal_moves))
+                # Final fallback to random move
+                legal_moves = list(board_copy.legal_moves)
+                if legal_moves:
+                    self.ai_move = random.choice(legal_moves)
+                    print("AI fallback to random move")
+                else:
+                    self.ai_move = None
+                    
         except Exception as e:
             print(f"AI calculation error: {e}")
-            self.ai_move = random.choice(list(board_copy.legal_moves))
+            legal_moves = list(board_copy.legal_moves)
+            if legal_moves:
+                self.ai_move = random.choice(legal_moves)
+            else:
+                self.ai_move = None
         finally:
             self.thinking = False
 
@@ -288,6 +880,29 @@ class AdvancedAdaptiveChessAI:
         self.player_model.record_game(self.current_game_moves, completed)
         self.player_model.save(self.current_game_moves, completed)
         self.current_game_moves = []
+        self.position_history = []  # Clear position history
+        
+    def get_strength_description(self):
+        """Get a description of current AI strength"""
+        descriptions = {
+            1: "Beginner (Fast, Basic)",
+            2: "Novice (Quick Tactics)", 
+            3: "Intermediate (Balanced)",
+            4: "Advanced (Strong Tactics)",
+            5: "Expert (Deep Analysis)",
+            6: "Master (Tournament Strength)"
+        }
+        return descriptions.get(self.search_depth, f"Custom Depth {self.search_depth}")
+        
+    def get_performance_stats(self):
+        """Get performance statistics"""
+        return {
+            'last_search_time': self.last_search_time,
+            'transposition_hits': self.engine.tt_hits,
+            'nodes_searched': self.engine.nodes_searched,
+            'adaptive_depth': self.adaptive_depth,
+            'tt_size': len(self.engine.transposition_table)
+        }
 
 # --- Enhanced Pygame Chess GUI ---
 WHITE_TURN_BG = (240, 248, 255)
@@ -1011,7 +1626,8 @@ def draw_side_panel(screen, settings, captured_white, captured_black, move_histo
         if board.turn == chess.BLACK and ai and ai.thinking:
             status_text = "🤔 AI Thinking"
             status_color = ACCENT_COLOR
-            subtitle = f"Depth {ai.search_depth}"
+            adaptive_depth = ai.get_adaptive_depth(board) if hasattr(ai, 'get_adaptive_depth') else ai.search_depth 
+            subtitle = f"Depth {adaptive_depth} • {ai.get_strength_description()}"
         else:
             status_text = f"▶️ {turn}'s Turn"
             status_color = (255, 255, 255) if board.turn == chess.WHITE else (220, 220, 220)
@@ -1275,11 +1891,13 @@ def draw_bottom_panel(screen, font, board, ai, settings):
         bg_color1, bg_color2 = (40, 60, 60), (20, 20, 20)  # Better contrast
         text_color = (255, 255, 255)
         if ai.thinking:
+            adaptive_depth = ai.get_adaptive_depth(board) if hasattr(ai, 'get_adaptive_depth') else ai.search_depth
             turn_message = f"AI Computing..."
-            subtitle = f"Analyzing position (Depth {ai.search_depth})"
+            subtitle = f"Analyzing at depth {adaptive_depth} • {ai.get_strength_description()}"
         else:
             turn_message = f"AI's Turn"
-            subtitle = f"AI ready to move (Strength: {ai.search_depth})"
+            strength_desc = ai.get_strength_description() if hasattr(ai, 'get_strength_description') else f"Depth {ai.search_depth}"
+            subtitle = f"Ready to move • {strength_desc}"
 
     draw_gradient_rect(screen, bg_color1, bg_color2, panel_rect)
     pygame.draw.line(screen, ACCENT_COLOR, (0, BOARD_HEIGHT + BOARD_Y_OFFSET), 
