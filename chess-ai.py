@@ -15,27 +15,28 @@ PLAYER_GAMES_LOG = 'player_games.log'
 
 # --- Enhanced Visual Settings ---
 BOARD_THEMES = {
-    'Classic': [(240, 217, 181), (181, 136, 99)],
-    'Blue': [(240, 248, 255), (100, 149, 237)],
-    'Green': [(240, 255, 240), (34, 139, 34)],
-    'Purple': [(245, 240, 255), (138, 43, 226)],
-    'Wood': [(222, 184, 135), (139, 69, 19)],
-    'Ocean': [(176, 224, 230), (25, 25, 112)],
-    'Sunset': [(255, 228, 196), (255, 140, 0)]
+    'Classic': [(248, 240, 227), (181, 136, 99)],
+    'Modern': [(250, 250, 252), (107, 123, 164)],
+    'Ocean': [(234, 246, 255), (74, 144, 226)],
+    'Forest': [(245, 250, 245), (76, 153, 76)],
+    'Sunset': [(255, 248, 240), (255, 126, 95)],
+    'Midnight': [(240, 242, 247), (67, 76, 94)],
+    'Rose': [(254, 247, 250), (225, 117, 162)]
 }
 
 HIGHLIGHT_COLORS = {
-    'Classic': (100, 200, 100),
-    'Bright': (255, 255, 0),
-    'Soft': (144, 238, 144),
-    'Red': (255, 99, 71),
-    'Blue': (135, 206, 250)
+    'Classic': (34, 197, 94),
+    'Electric': (59, 130, 246),
+    'Vibrant': (245, 101, 101),
+    'Emerald': (16, 185, 129),
+    'Purple': (139, 92, 246),
+    'Gold': (251, 191, 36)
 }
 
-# Game settings with defaults
+# Game settings with modern defaults
 GAME_SETTINGS = {
-    'board_theme': 'Classic',
-    'highlight_color': 'Classic',
+    'board_theme': 'Modern',
+    'highlight_color': 'Electric',
     'show_legal_moves': True,
     'animate_moves': True,
     'show_coordinates': True,
@@ -44,7 +45,7 @@ GAME_SETTINGS = {
     'board_flipped': False,
     'sound_enabled': False,
     'auto_save': True,
-    'move_delay': 0.2  # Reduced for faster gameplay
+    'move_delay': 0.15  # Optimized for smooth gameplay
 }
 
 # --- Persistent Player Model ---
@@ -905,20 +906,22 @@ class AdvancedAdaptiveChessAI:
         }
 
 # --- Enhanced Pygame Chess GUI ---
-WHITE_TURN_BG = (240, 248, 255)
-WHITE_TURN_TEXT = (25, 25, 112)
-BLACK_TURN_BG = (47, 79, 79)
-BLACK_TURN_TEXT = (255, 255, 255)
-# Optimized for MacBook M1 Air screen
-BOARD_WIDTH = 560  # Reduced from 640
-BOARD_HEIGHT = 560  # Reduced from 640
-PANEL_HEIGHT = 80   # Reduced from 100
-SIDE_PANEL_WIDTH = 220  # Reduced from 250
-WIDTH = BOARD_WIDTH + SIDE_PANEL_WIDTH
-HEIGHT = BOARD_HEIGHT + 2 * PANEL_HEIGHT
-SQ_SIZE = BOARD_WIDTH // 8
+WHITE_TURN_BG = (248, 250, 252)
+WHITE_TURN_TEXT = (15, 23, 42)
+BLACK_TURN_BG = (30, 41, 59)
+BLACK_TURN_TEXT = (248, 250, 252)
+
+# Optimized for MacBook Air M1 13.3" display (2560x1600) - comfortable window size
+BOARD_WIDTH = 600   # Increased from 560 for better piece visibility
+BOARD_HEIGHT = 600  # Square board for better proportions
+PANEL_HEIGHT = 90   # Increased from 80 for better content spacing
+SIDE_PANEL_WIDTH = 280  # Increased from 220 for better readability
+WIDTH = BOARD_WIDTH + SIDE_PANEL_WIDTH  # Total: 880px
+HEIGHT = BOARD_HEIGHT + 2 * PANEL_HEIGHT  # Total: 780px
+SQ_SIZE = BOARD_WIDTH // 8  # 75px per square
 FPS = 60
 BOARD_Y_OFFSET = PANEL_HEIGHT
+
 PIECE_IMAGE_NAMES = {
     'P': 'Pawn - W.png', 'N': 'Knight - W.png', 'B': 'Bishop - W.png', 'R': 'Rook - W.png', 'Q': 'Queen - W.png', 'K': 'King - W.png',
     'p': 'Pawn - B.png', 'n': 'Knight - B.png', 'b': 'Bishop - B.png', 'r': 'Rook - B.png', 'q': 'Queen - B.png', 'k': 'King - B.png',
@@ -929,51 +932,76 @@ PIECE_SYMBOLS = {
     'p': '♟', 'n': '♞', 'b': '♝', 'r': '♜', 'q': ' ', 'k': '♚',
 }
 
-# Enhanced color scheme for better readability and contrast
-MENU_BG_COLOR = (25, 25, 30)  # Darker for better contrast
-MENU_TEXT_COLOR = (250, 250, 255)  # Brighter white for better readability
-BUTTON_COLOR = (70, 75, 85)  # Lighter for better visibility
-BUTTON_HOVER_COLOR = (90, 95, 105)  # More contrast on hover
-BUTTON_TEXT_COLOR = (255, 255, 255)
-ACCENT_COLOR = (120, 160, 255)  # Brighter blue for better visibility
-SIDE_PANEL_BG = (35, 35, 40)  # Lighter for better text contrast
-CAPTURE_AREA_BG = (45, 45, 50)  # Better contrast
-SUCCESS_COLOR = (100, 200, 100)  # Brighter green
-WARNING_COLOR = (255, 180, 50)  # Better orange for visibility
-ERROR_COLOR = (255, 100, 100)  # Brighter red
+# Modern color scheme optimized for MacBook Air M1 display
+MENU_BG_COLOR = (15, 23, 42)  # Rich dark blue-gray
+MENU_TEXT_COLOR = (248, 250, 252)  # Clean white
+BUTTON_COLOR = (51, 65, 85)  # Subtle slate
+BUTTON_HOVER_COLOR = (71, 85, 105)  # Lighter slate on hover
+BUTTON_TEXT_COLOR = (248, 250, 252)  # Clean white text
+ACCENT_COLOR = (59, 130, 246)  # Modern blue
+SIDE_PANEL_BG = (30, 41, 59)  # Dark slate
+CAPTURE_AREA_BG = (51, 65, 85)  # Matching slate
+SUCCESS_COLOR = (34, 197, 94)  # Modern green
+WARNING_COLOR = (251, 191, 36)  # Warm amber
+ERROR_COLOR = (239, 68, 68)  # Modern red
 
-# Enhanced font system for better readability
+# Enhanced font system optimized for MacBook Air M1 Retina display
 def get_fonts():
-    """Get optimized fonts for better readability"""
+    """Get optimized fonts with better hierarchy for Retina displays"""
     try:
-        # Try to use better fonts if available - slightly larger for better readability
-        title_font = pygame.font.SysFont('Arial', 36, bold=True)  # Increased from 32
-        heading_font = pygame.font.SysFont('Arial', 26, bold=True)  # Increased from 24
-        text_font = pygame.font.SysFont('Arial', 22)  # Increased from 20
-        small_font = pygame.font.SysFont('Arial', 18)  # Increased from 16
-        button_font = pygame.font.SysFont('Arial', 20, bold=True)  # Increased from 18
+        # Try SF Pro (macOS system font) first, then fallback to Arial
+        # Sizes optimized for Retina display readability
+        title_font = pygame.font.SysFont('SF Pro Display', 40, bold=True)
+        if title_font.get_ascent() < 30:  # Fallback if SF Pro not found
+            title_font = pygame.font.SysFont('Arial', 38, bold=True)
+            
+        heading_font = pygame.font.SysFont('SF Pro Display', 28, bold=True)
+        if heading_font.get_ascent() < 20:
+            heading_font = pygame.font.SysFont('Arial', 28, bold=True)
+            
+        text_font = pygame.font.SysFont('SF Pro Text', 24)
+        if text_font.get_ascent() < 18:
+            text_font = pygame.font.SysFont('Arial', 24)
+            
+        small_font = pygame.font.SysFont('SF Pro Text', 20)
+        if small_font.get_ascent() < 15:
+            small_font = pygame.font.SysFont('Arial', 20)
+            
+        button_font = pygame.font.SysFont('SF Pro Display', 22, bold=True)
+        if button_font.get_ascent() < 16:
+            button_font = pygame.font.SysFont('Arial', 22, bold=True)
+            
+        mono_font = pygame.font.SysFont('SF Mono', 20)  # For coordinates and technical text
+        if mono_font.get_ascent() < 15:
+            mono_font = pygame.font.SysFont('Monaco', 20)
+            
     except:
-        # Fallback to default fonts
-        title_font = pygame.font.SysFont(None, 40)  # Increased
-        heading_font = pygame.font.SysFont(None, 30)  # Increased
-        text_font = pygame.font.SysFont(None, 26)  # Increased
-        small_font = pygame.font.SysFont(None, 22)  # Increased
-        button_font = pygame.font.SysFont(None, 24)  # Increased
+        # Enhanced fallback fonts with better sizing
+        title_font = pygame.font.SysFont(None, 44)
+        heading_font = pygame.font.SysFont(None, 32)
+        text_font = pygame.font.SysFont(None, 28)
+        small_font = pygame.font.SysFont(None, 24)
+        button_font = pygame.font.SysFont(None, 26)
+        mono_font = pygame.font.SysFont(None, 24)
     
     return {
         'title': title_font,
         'heading': heading_font,
         'text': text_font,
         'small': small_font,
-        'button': button_font
+        'button': button_font,
+        'mono': mono_font
     }
 
-def draw_text_with_shadow(surface, font, text, color, x, y, shadow_color=(0, 0, 0), shadow_offset=2):
-    """Draw text with enhanced shadow for better readability"""
-    # Draw shadow with better offset for readability
+def draw_text_with_shadow(surface, font, text, color, x, y, shadow_color=(0, 0, 0, 80), shadow_offset=2):
+    """Draw text with enhanced shadow for Retina display clarity"""
+    # Create shadow with alpha blending for smoother appearance
+    shadow_surface = pygame.Surface(font.size(text), pygame.SRCALPHA)
     shadow_text = font.render(text, True, shadow_color)
-    surface.blit(shadow_text, (x + shadow_offset, y + shadow_offset))
-    # Draw main text
+    shadow_surface.blit(shadow_text, (0, 0))
+    surface.blit(shadow_surface, (x + shadow_offset, y + shadow_offset))
+    
+    # Draw main text with anti-aliasing
     main_text = font.render(text, True, color)
     surface.blit(main_text, (x, y))
     return main_text.get_rect(x=x, y=y)
@@ -1005,10 +1033,17 @@ def draw_gradient_rect(surface, color1, color2, rect):
 def draw_board(screen, board, images, settings, selected_square=None, highlight_move=None, animating_piece=None):
     board_colors = BOARD_THEMES[settings['board_theme']]
     highlight_color = HIGHLIGHT_COLORS[settings['highlight_color']]
+    fonts = get_fonts()
     
-    # Board background with subtle shadow
-    shadow_rect = pygame.Rect(5, BOARD_Y_OFFSET + 5, BOARD_WIDTH, BOARD_HEIGHT)
-    pygame.draw.rect(screen, (20, 20, 20), shadow_rect)
+    # Enhanced board background with subtle gradient shadow
+    shadow_rect = pygame.Rect(8, BOARD_Y_OFFSET + 8, BOARD_WIDTH, BOARD_HEIGHT)
+    shadow_surface = pygame.Surface((BOARD_WIDTH, BOARD_HEIGHT), pygame.SRCALPHA)
+    pygame.draw.rect(shadow_surface, (0, 0, 0, 40), (0, 0, BOARD_WIDTH, BOARD_HEIGHT), border_radius=12)
+    screen.blit(shadow_surface, (8, BOARD_Y_OFFSET + 8))
+    
+    # Main board with rounded corners
+    board_rect = pygame.Rect(0, BOARD_Y_OFFSET, BOARD_WIDTH, BOARD_HEIGHT)
+    pygame.draw.rect(screen, board_colors[1], board_rect, border_radius=8)  # Base color
     
     for rank in range(8):
         for file in range(8):
@@ -1018,48 +1053,53 @@ def draw_board(screen, board, images, settings, selected_square=None, highlight_
             color = board_colors[(rank + file) % 2]
             rect = pygame.Rect(file * SQ_SIZE, rank * SQ_SIZE + BOARD_Y_OFFSET, SQ_SIZE, SQ_SIZE)
             
-            # Draw square with theme colors
+            # Draw square with subtle inner border for depth
             pygame.draw.rect(screen, color, rect)
+            
+            # Add subtle inner shadow for depth (only on light squares)
+            if (rank + file) % 2 == 0:
+                inner_shadow = pygame.Surface((SQ_SIZE, SQ_SIZE), pygame.SRCALPHA)
+                pygame.draw.rect(inner_shadow, (0, 0, 0, 15), (0, 0, SQ_SIZE, SQ_SIZE))
+                pygame.draw.rect(inner_shadow, (255, 255, 255, 25), (1, 1, SQ_SIZE-2, SQ_SIZE-2))
+                screen.blit(inner_shadow, rect)
             
             sq = chess.square(display_file, display_rank)
             
-            # Enhanced square highlighting
+            # Enhanced square highlighting with smooth animations
             if selected_square == sq:
-                pygame.draw.rect(screen, highlight_color, rect, 4)
-                overlay = pygame.Surface((SQ_SIZE, SQ_SIZE))
-                overlay.set_alpha(50)
-                overlay.fill(highlight_color)
-                screen.blit(overlay, rect)
+                # Animated selection with pulsing effect
+                glow_surface = pygame.Surface((SQ_SIZE, SQ_SIZE), pygame.SRCALPHA)
+                glow_alpha = int(40 + 20 * abs(pygame.time.get_ticks() % 2000 - 1000) / 1000)
+                pygame.draw.rect(glow_surface, (*highlight_color, glow_alpha), (0, 0, SQ_SIZE, SQ_SIZE))
+                screen.blit(glow_surface, rect)
+                
+                # Border with rounded corners
+                pygame.draw.rect(screen, highlight_color, rect, 4, border_radius=6)
+                
             elif highlight_move and (highlight_move.from_square == sq or highlight_move.to_square == sq):
-                pygame.draw.rect(screen, ACCENT_COLOR, rect, 3)
-                overlay = pygame.Surface((SQ_SIZE, SQ_SIZE))
-                overlay.set_alpha(30)
-                overlay.fill(ACCENT_COLOR)
-                screen.blit(overlay, rect)
+                # Last move highlighting with subtle glow
+                move_surface = pygame.Surface((SQ_SIZE, SQ_SIZE), pygame.SRCALPHA)
+                pygame.draw.rect(move_surface, (*ACCENT_COLOR, 60), (0, 0, SQ_SIZE, SQ_SIZE))
+                screen.blit(move_surface, rect)
+                pygame.draw.rect(screen, ACCENT_COLOR, rect, 3, border_radius=4)
             
-            # Draw coordinates if enabled with better contrast
+            # Enhanced coordinates with mono font and better positioning
             if settings['show_coordinates']:
-                coord_font = pygame.font.SysFont('Arial', 14, bold=True)  # Bold for better readability
-                coord_shadow_color = (0, 0, 0)  # Black shadow for contrast
-                coord_text_color = (255, 255, 255) if (rank + file) % 2 == 0 else (0, 0, 0)  # Contrast with square color
+                coord_color = (255, 255, 255, 180) if (rank + file) % 2 == 1 else (0, 0, 0, 180)
                 
                 if rank == 7:  # Bottom rank for files
                     file_char = chr(ord('a') + display_file)
-                    # Draw shadow for better visibility
-                    shadow_text = coord_font.render(file_char, True, coord_shadow_color)
-                    screen.blit(shadow_text, (rect.x + 6, rect.y + SQ_SIZE - 14))
-                    # Draw main text
-                    file_text = coord_font.render(file_char, True, coord_text_color)
-                    screen.blit(file_text, (rect.x + 5, rect.y + SQ_SIZE - 15))
+                    coord_surface = pygame.Surface(fonts['mono'].size(file_char), pygame.SRCALPHA)
+                    coord_text = fonts['mono'].render(file_char, True, coord_color)
+                    coord_surface.blit(coord_text, (0, 0))
+                    screen.blit(coord_surface, (rect.x + SQ_SIZE - 20, rect.y + SQ_SIZE - 22))
                     
                 if file == 0:  # Left file for ranks
                     rank_str = str(display_rank + 1)
-                    # Draw shadow for better visibility
-                    shadow_text = coord_font.render(rank_str, True, coord_shadow_color)
-                    screen.blit(shadow_text, (rect.x + SQ_SIZE - 13, rect.y + 6))
-                    # Draw main text
-                    rank_text = coord_font.render(rank_str, True, coord_text_color)
-                    screen.blit(rank_text, (rect.x + SQ_SIZE - 14, rect.y + 5))
+                    coord_surface = pygame.Surface(fonts['mono'].size(rank_str), pygame.SRCALPHA)
+                    coord_text = fonts['mono'].render(rank_str, True, coord_color)
+                    coord_surface.blit(coord_text, (0, 0))
+                    screen.blit(coord_surface, (rect.x + 4, rect.y + 4))
             
             # Skip drawing piece if it's being animated
             if animating_piece and animating_piece[0] == sq:
@@ -1069,15 +1109,32 @@ def draw_board(screen, board, images, settings, selected_square=None, highlight_
             if piece:
                 symbol = piece.symbol()
                 if symbol in images and images[symbol] is not None:
+                    # Add subtle drop shadow for pieces
+                    shadow_surf = pygame.Surface((SQ_SIZE, SQ_SIZE), pygame.SRCALPHA)
+                    shadow_img = images[symbol].copy()
+                    shadow_img.fill((0, 0, 0, 60), special_flags=pygame.BLEND_RGBA_MULT)
+                    shadow_surf.blit(shadow_img, (0, 0))
+                    screen.blit(shadow_surf, (rect.x + 2, rect.y + 2))
+                    
+                    # Draw main piece
                     screen.blit(images[symbol], rect)
                 else:
-                    # Fallback piece drawing
-                    piece_color = (255, 255, 255) if piece.color == chess.WHITE else (0, 0, 0)
+                    # Enhanced fallback piece drawing
+                    piece_color = (248, 250, 252) if piece.color == chess.WHITE else (15, 23, 42)
+                    border_color = (15, 23, 42) if piece.color == chess.WHITE else (248, 250, 252)
+                    
+                    # Draw piece background
                     pygame.draw.circle(screen, piece_color, rect.center, SQ_SIZE // 3)
-                    font = pygame.font.SysFont(None, 48)
-                    text = font.render(PIECE_SYMBOLS[symbol], True, (255, 0, 0))
+                    pygame.draw.circle(screen, border_color, rect.center, SQ_SIZE // 3, 2)
+                    
+                    # Draw piece symbol
+                    symbol_font = pygame.font.SysFont('SF Pro Display', 36, bold=True)
+                    text = symbol_font.render(PIECE_SYMBOLS[symbol], True, border_color)
                     text_rect = text.get_rect(center=rect.center)
                     screen.blit(text, text_rect)
+    
+    # Add subtle board border
+    pygame.draw.rect(screen, (0, 0, 0, 100), board_rect, 2, border_radius=8)
 
 def get_square_under_mouse(pos, settings):
     x, y = pos
@@ -1118,11 +1175,41 @@ def draw_possible_moves(screen, board, selected_square, settings):
             center_x = file * SQ_SIZE + SQ_SIZE // 2
             center_y = display_rank * SQ_SIZE + SQ_SIZE // 2 + BOARD_Y_OFFSET
             
-            # Enhanced move indicators
+            # Enhanced move indicators with modern styling
             if board.piece_at(move_square):  # Capture indicator
-                pygame.draw.circle(screen, highlight_color, (center_x, center_y), SQ_SIZE // 3, 4)
+                # Animated capture ring with subtle pulsing
+                pulse_factor = 0.8 + 0.2 * abs(pygame.time.get_ticks() % 1500 - 750) / 750
+                ring_radius = int((SQ_SIZE // 2.2) * pulse_factor)
+                
+                # Outer glow
+                glow_surface = pygame.Surface((SQ_SIZE, SQ_SIZE), pygame.SRCALPHA)
+                pygame.draw.circle(glow_surface, (*highlight_color, 40), 
+                                 (SQ_SIZE//2, SQ_SIZE//2), ring_radius + 8)
+                screen.blit(glow_surface, (center_x - SQ_SIZE//2, center_y - SQ_SIZE//2))
+                
+                # Main capture ring
+                pygame.draw.circle(screen, highlight_color, (center_x, center_y), ring_radius, 4)
+                
+                # Inner highlight
+                pygame.draw.circle(screen, (*highlight_color, 120), (center_x, center_y), ring_radius - 2)
+                
             else:  # Regular move indicator
-                pygame.draw.circle(screen, highlight_color, (center_x, center_y), SQ_SIZE // 6)
+                # Animated dot with subtle scaling
+                scale_factor = 0.9 + 0.1 * abs(pygame.time.get_ticks() % 1200 - 600) / 600
+                dot_radius = int((SQ_SIZE // 6) * scale_factor)
+                
+                # Outer glow for the dot
+                glow_surface = pygame.Surface((SQ_SIZE//2, SQ_SIZE//2), pygame.SRCALPHA)
+                pygame.draw.circle(glow_surface, (*highlight_color, 60), 
+                                 (SQ_SIZE//4, SQ_SIZE//4), dot_radius + 4)
+                screen.blit(glow_surface, (center_x - SQ_SIZE//4, center_y - SQ_SIZE//4))
+                
+                # Main dot
+                pygame.draw.circle(screen, highlight_color, (center_x, center_y), dot_radius)
+                
+                # Inner highlight
+                highlight_pos = (center_x - dot_radius//3, center_y - dot_radius//3)
+                pygame.draw.circle(screen, (255, 255, 255, 100), highlight_pos, dot_radius//3)
 
 def animate_move(screen, board, images, settings, move, clock):
     """Animate a piece moving from one square to another"""
@@ -1320,397 +1407,483 @@ def draw_move_history(screen, move_history, settings):
         y_offset += 20
 
 def draw_enhanced_menu(screen, settings, ai_settings, font, mouse_pos):
-    """Enhanced settings menu with proper spacing to prevent overlaps"""
+    """Modern settings menu with glass-morphism design and enhanced UX"""
     screen.fill(MENU_BG_COLOR)
     fonts = get_fonts()
     
-    # Title with better styling - make title area smaller to prevent overlap
-    title_rect = pygame.Rect(0, 0, WIDTH, 70)  # Reduced height
-    draw_gradient_rect(screen, ACCENT_COLOR, (60, 80, 180), title_rect)
+    # Modern gradient header with glass effect
+    header_rect = pygame.Rect(0, 0, WIDTH, 90)
+    header_surface = pygame.Surface((WIDTH, 90), pygame.SRCALPHA)
     
-    # Main title with shadow - centered properly
-    title_text = "⚙️ Game Settings"
+    # Gradient background
+    for y in range(90):
+        alpha = int(200 - (y * 50 / 90))  # Fade from opaque to semi-transparent
+        color = (*ACCENT_COLOR, alpha)
+        pygame.draw.line(header_surface, color, (0, y), (WIDTH, y))
+    
+    screen.blit(header_surface, (0, 0))
+    
+    # Header accent line
+    pygame.draw.line(screen, (255, 255, 255, 100), (0, 85), (WIDTH, 85), 2)
+    
+    # Modern title with better positioning
+    title_text = "⚙️ Settings"
     title_width = fonts['title'].size(title_text)[0]
     draw_text_with_shadow(screen, fonts['title'], title_text, 
-                         (255, 255, 255), WIDTH//2 - title_width//2, 15)  # Higher position
+                         (255, 255, 255), WIDTH//2 - title_width//2, 20, (0, 0, 0, 120), 3)
     
-    # Subtitle - positioned to not overlap with content below
-    subtitle_text = fonts['small'].render(" ", True, (220, 220, 220))
-    subtitle_rect = subtitle_text.get_rect(center=(WIDTH//2, 45))  # Higher position
-    screen.blit(subtitle_text, subtitle_rect)
+    # Subtitle with better contrast
+    subtitle_text = "Configure your chess experience"
+    subtitle_width = fonts['text'].size(subtitle_text)[0]
+    draw_text_with_shadow(screen, fonts['text'], subtitle_text, 
+                         (220, 220, 235), WIDTH//2 - subtitle_width//2, 55, (0, 0, 0, 100), 2)
     
-    # Main content area - start lower to avoid overlap
-    content_y = 70  # Reduced from 80
-    col1_x, col2_x = 20, WIDTH // 2 + 20  # Reduced margins
+    # Main content area with better spacing
+    content_y = 105
+    col1_x, col2_x = 30, WIDTH // 2 + 30
     
-    # ===== LEFT COLUMN =====
+    # ===== LEFT COLUMN - AI & VISUAL SETTINGS =====
     y_pos = content_y
     
-    # AI Settings Section
-    ai_header_rect = pygame.Rect(col1_x - 5, y_pos - 5, min(300, WIDTH//2 - 50), 30)
-    pygame.draw.rect(screen, (50, 50, 55), ai_header_rect, border_radius=5)
+    # AI Settings Card
+    ai_card = pygame.Rect(col1_x - 10, y_pos - 10, min(350, WIDTH//2 - 40), 180)
+    ai_surface = pygame.Surface((ai_card.width, ai_card.height), pygame.SRCALPHA)
+    pygame.draw.rect(ai_surface, (255, 255, 255, 10), (0, 0, ai_card.width, ai_card.height), border_radius=12)
+    pygame.draw.rect(ai_surface, SUCCESS_COLOR, (0, 0, ai_card.width, ai_card.height), 2, border_radius=12)
+    screen.blit(ai_surface, (ai_card.x, ai_card.y))
     
-    draw_text_with_shadow(screen, fonts['heading'], "🤖 AI Configuration", 
-                         SUCCESS_COLOR, col1_x, y_pos)
-    y_pos += 40
+    # AI header with icon
+    draw_text_with_shadow(screen, fonts['small'], "🤖", SUCCESS_COLOR, col1_x, y_pos, (0, 0, 0, 100), 2)
+    draw_text_with_shadow(screen, fonts['heading'], "AI Configuration", SUCCESS_COLOR, col1_x + 30, y_pos, (0, 0, 0, 100), 2)
+    y_pos += 45
     
-    # AI Depth with better spacing
+    # AI Difficulty
     difficulty_names = {1: "Beginner", 2: "Easy", 3: "Normal", 4: "Hard", 5: "Expert", 6: "Master"}
     difficulty_text = difficulty_names.get(ai_settings['search_depth'], "Custom")
     
-    draw_enhanced_setting_row(screen, fonts, "Intelligence Level:", 
-                             f"{ai_settings['search_depth']} ({difficulty_text})", 
-                             col1_x, y_pos, mouse_pos, 'depth', 
-                             "Higher = stronger but slower")
-    y_pos += 65  # Reduced spacing
+    draw_modern_setting_row(screen, fonts, "Intelligence Level:", 
+                           f"{ai_settings['search_depth']} ({difficulty_text})", 
+                           col1_x, y_pos, mouse_pos, 'depth', 
+                           "Higher levels are stronger but slower", SUCCESS_COLOR)
+    y_pos += 70
     
     # AI Aggressivity
-    aggro_desc = {
-        0.0: "Defensive", 0.5: "Balanced", 1.0: "Normal", 
-        1.5: "Aggressive", 2.0: "Very Aggressive"
-    }
+    aggro_desc = {0.0: "Defensive", 0.5: "Balanced", 1.0: "Normal", 1.5: "Aggressive", 2.0: "Very Aggressive"}
     aggro_style = aggro_desc.get(round(ai_settings['aggressivity_factor'], 1), "Custom")
     
-    draw_enhanced_setting_row(screen, fonts, "Playing Style:", 
-                             f"{ai_settings['aggressivity_factor']:.1f} ({aggro_style})", 
-                             col1_x, y_pos, mouse_pos, 'aggro',
-                             "AI's tactical approach")
-    y_pos += 70  # Reduced spacing
+    draw_modern_setting_row(screen, fonts, "Playing Style:", 
+                           f"{ai_settings['aggressivity_factor']:.1f} ({aggro_style})", 
+                           col1_x, y_pos, mouse_pos, 'aggro',
+                           "AI's tactical approach and risk-taking", SUCCESS_COLOR)
+    y_pos += 85
     
-    # Visual Settings Section
-    visual_header_rect = pygame.Rect(col1_x - 5, y_pos - 5, min(300, WIDTH//2 - 50), 30)
-    pygame.draw.rect(screen, (50, 50, 55), visual_header_rect, border_radius=5)
+    # Visual Settings Card
+    visual_card = pygame.Rect(col1_x - 10, y_pos - 10, min(350, WIDTH//2 - 40), 140)
+    visual_surface = pygame.Surface((visual_card.width, visual_card.height), pygame.SRCALPHA)
+    pygame.draw.rect(visual_surface, (255, 255, 255, 10), (0, 0, visual_card.width, visual_card.height), border_radius=12)
+    pygame.draw.rect(visual_surface, WARNING_COLOR, (0, 0, visual_card.width, visual_card.height), 2, border_radius=12)
+    screen.blit(visual_surface, (visual_card.x, visual_card.y))
     
-    draw_text_with_shadow(screen, fonts['heading'], "🎨 Visual Settings", 
-                         WARNING_COLOR, col1_x, y_pos)
-    y_pos += 40
+    # Visual header with icon
+    draw_text_with_shadow(screen, fonts['small'], "🎨", WARNING_COLOR, col1_x, y_pos, (0, 0, 0, 100), 2)
+    draw_text_with_shadow(screen, fonts['heading'], "Visual Settings", WARNING_COLOR, col1_x + 30, y_pos, (0, 0, 0, 100), 2)
+    y_pos += 45
     
     # Board Theme
-    draw_enhanced_setting_row(screen, fonts, "Board Theme:", settings['board_theme'], 
-                             col1_x, y_pos, mouse_pos, 'theme',
-                             "Board color scheme")
-    y_pos += 65  # Reduced spacing
+    draw_modern_setting_row(screen, fonts, "Board Theme:", settings['board_theme'], 
+                           col1_x, y_pos, mouse_pos, 'theme',
+                           "Board color scheme and style", WARNING_COLOR)
+    y_pos += 70
     
     # Highlight Color
-    draw_enhanced_setting_row(screen, fonts, "Highlight Color:", settings['highlight_color'], 
-                             col1_x, y_pos, mouse_pos, 'highlight',
-                             "Selection highlight style")
+    draw_modern_setting_row(screen, fonts, "Highlight Color:", settings['highlight_color'], 
+                           col1_x, y_pos, mouse_pos, 'highlight',
+                           "Move selection highlight style", WARNING_COLOR)
     
-    # ===== RIGHT COLUMN =====
+    # ===== RIGHT COLUMN - GAME FEATURES =====
     y_pos = content_y
     
-    # Game Features Section
-    features_header_rect = pygame.Rect(col2_x - 5, y_pos - 5, min(300, WIDTH//2 - 50), 30)
-    pygame.draw.rect(screen, (50, 50, 55), features_header_rect, border_radius=5)
+    # Game Features Card
+    features_card = pygame.Rect(col2_x - 10, y_pos - 10, min(350, WIDTH//2 - 40), 380)
+    features_surface = pygame.Surface((features_card.width, features_card.height), pygame.SRCALPHA)
+    pygame.draw.rect(features_surface, (255, 255, 255, 10), (0, 0, features_card.width, features_card.height), border_radius=12)
+    pygame.draw.rect(features_surface, ACCENT_COLOR, (0, 0, features_card.width, features_card.height), 2, border_radius=12)
+    screen.blit(features_surface, (features_card.x, features_card.y))
     
-    draw_text_with_shadow(screen, fonts['heading'], "🎮 Game Features", 
-                         ACCENT_COLOR, col2_x, y_pos)
-    y_pos += 40
+    # Features header with icon
+    draw_text_with_shadow(screen, fonts['small'], "🎮", ACCENT_COLOR, col2_x, y_pos, (0, 0, 0, 100), 2)
+    draw_text_with_shadow(screen, fonts['heading'], "Game Features", ACCENT_COLOR, col2_x + 30, y_pos, (0, 0, 0, 100), 2)
+    y_pos += 45
     
-    # Enhanced toggle settings with much better spacing
+    # Enhanced toggle settings with better spacing
     toggle_settings = [
-        ('show_legal_moves', 'Show Legal Moves', 'Highlight moves'),
-        ('animate_moves', 'Animate Moves', 'Smooth animations'),
-        ('show_coordinates', 'Show Coordinates', 'Board labels'),
-        ('show_captured_pieces', 'Show Captured', 'Taken pieces'),
-        ('show_move_history', 'Move History', 'Recent moves'),
-        ('board_flipped', 'Flip Board', 'Rotate view'),
-        ('auto_save', 'Auto-Save', 'Save games')
+        ('show_legal_moves', 'Show Legal Moves', 'Highlight possible moves', '🎯'),
+        ('animate_moves', 'Animate Moves', 'Smooth piece animations', '✨'),
+        ('show_coordinates', 'Show Coordinates', 'Display board labels', '🔤'),
+        ('show_captured_pieces', 'Show Captured', 'Display taken pieces', '📦'),
+        ('show_move_history', 'Move History', 'Show recent moves', '📝'),
+        ('board_flipped', 'Flip Board', 'Rotate board view', '🔄'),
+        ('auto_save', 'Auto-Save Games', 'Automatically save progress', '💾')
     ]
     
-    for setting_key, display_name, description in toggle_settings:
-        draw_enhanced_toggle_setting(screen, fonts, display_name, settings[setting_key], 
-                                   col2_x, y_pos, mouse_pos, setting_key, description)
-        y_pos += 50  # Reduced spacing between toggle items
+    for setting_key, display_name, description, icon in toggle_settings:
+        draw_modern_toggle_setting(screen, fonts, display_name, settings[setting_key], 
+                                  col2_x, y_pos, mouse_pos, setting_key, description, icon)
+        y_pos += 50
     
-    # Action buttons positioned higher to avoid overlap
-    button_y = HEIGHT - 60  # Higher position
-    button_width = 120  # Slightly smaller buttons
-    button_height = 30
-    button_spacing = 30
+    # Modern action buttons with better positioning
+    button_y = HEIGHT - 70
+    button_width = 140
+    button_height = 40
+    button_spacing = 25
     
     total_width = 3 * button_width + 2 * button_spacing
     start_x = (WIDTH - total_width) // 2
     
-    # Ensure buttons don't go off screen
-    if start_x < 10:
-        start_x = 10
-        button_width = (WIDTH - 100) // 3
-        button_spacing = 25
+    # Ensure buttons fit on screen
+    if start_x < 20:
+        start_x = 20
+        button_width = (WIDTH - 90) // 3
+        button_spacing = 20
     
     # Reset button
-    draw_premium_button(screen, fonts['button'], "🔄 Reset", 
-                       start_x, button_y, button_width, button_height, 
-                       mouse_pos, 'reset', ERROR_COLOR)
+    draw_modern_button(screen, fonts['button'], "🔄 Reset Defaults", 
+                      start_x, button_y, button_width, button_height, 
+                      mouse_pos, 'reset', ERROR_COLOR)
     
     # New Game button
-    draw_premium_button(screen, fonts['button'], "🎮 New Game", 
-                       start_x + button_width + button_spacing, button_y, 
-                       button_width, button_height, mouse_pos, 'new_game', SUCCESS_COLOR)
+    draw_modern_button(screen, fonts['button'], "🎮 New Game", 
+                      start_x + button_width + button_spacing, button_y, 
+                      button_width, button_height, mouse_pos, 'new_game', SUCCESS_COLOR)
     
     # Back button
-    draw_premium_button(screen, fonts['button'], "← Back", 
-                       start_x + 2 * (button_width + button_spacing), button_y, 
-                       button_width, button_height, mouse_pos, 'back', ACCENT_COLOR)
+    draw_modern_button(screen, fonts['button'], "← Back to Game", 
+                      start_x + 2 * (button_width + button_spacing), button_y, 
+                      button_width, button_height, mouse_pos, 'back', ACCENT_COLOR)
 
-def draw_enhanced_setting_row(screen, fonts, label, value, x, y, mouse_pos, setting_type, description):
-    """Enhanced setting row with buttons positioned right next to the values"""
-    max_width = WIDTH // 2 - 60
+def draw_modern_setting_row(screen, fonts, label, value, x, y, mouse_pos, setting_type, description, color):
+    """Modern setting row with glass-morphism design and enhanced UX"""
+    max_width = WIDTH // 2 - 80
     
-    # Main label
-    if fonts['text'].size(label)[0] > max_width - 100:
-        while fonts['text'].size(label + "...")[0] > max_width - 100 and len(label) > 10:
+    # Setting container with glass effect
+    container_rect = pygame.Rect(x - 5, y - 5, max_width, 60)
+    container_surface = pygame.Surface((container_rect.width, container_rect.height), pygame.SRCALPHA)
+    pygame.draw.rect(container_surface, (255, 255, 255, 8), (0, 0, container_rect.width, container_rect.height), border_radius=8)
+    pygame.draw.rect(container_surface, (120, 120, 125, 40), (0, 0, container_rect.width, container_rect.height), 1, border_radius=8)
+    screen.blit(container_surface, (container_rect.x, container_rect.y))
+    
+    # Main label with better hierarchy
+    if fonts['text'].size(label)[0] > max_width - 120:
+        while fonts['text'].size(label + "...")[0] > max_width - 120 and len(label) > 10:
             label = label[:-1]
         label += "..."
     
-    draw_text_with_shadow(screen, fonts['text'], label, MENU_TEXT_COLOR, x, y)
+    draw_text_with_shadow(screen, fonts['text'], label, MENU_TEXT_COLOR, x, y, (0, 0, 0, 100), 1)
     
-    # Value with highlighting
+    # Value with enhanced styling
     value_str = str(value)
-    if fonts['text'].size(value_str)[0] > 100:  # Allow more space for value
-        while fonts['text'].size(value_str + "...")[0] > 100 and len(value_str) > 5:
+    if fonts['text'].size(value_str)[0] > 120:
+        while fonts['text'].size(value_str + "...")[0] > 120 and len(value_str) > 5:
             value_str = value_str[:-1]
         value_str += "..."
     
-    value_color = WARNING_COLOR if setting_type in ['depth', 'aggro'] else (150, 200, 255)
-    value_x = x + 150
-    draw_text_with_shadow(screen, fonts['text'], value_str, value_color, value_x, y)
+    value_x = x + 160
+    draw_text_with_shadow(screen, fonts['text'], value_str, color, value_x, y, (0, 0, 0, 100), 1)
     
-    # Buttons positioned right after the value text
+    # Modern control buttons
     value_width = fonts['text'].size(value_str)[0]
-    button_x = value_x + value_width + 20  # More space for AI configuration buttons
-    minus_rect = pygame.Rect(button_x, y - 2, 26, 26)
-    plus_rect = pygame.Rect(button_x + 32, y - 2, 26, 26)
+    button_x = value_x + value_width + 25
     
-    # Description text - positioned below and truncated to avoid button area completely
-    desc_max_width = max_width - 10  # Use full width but leave margin
-    if fonts['small'].size(description)[0] > desc_max_width:
-        while fonts['small'].size(description + "...")[0] > desc_max_width and len(description) > 8:
-            description = description[:-1]
-        description += "..."
-    
-    desc_text = fonts['small'].render(description, True, (160, 160, 165))
-    screen.blit(desc_text, (x, y + 30))  # Move further down to avoid buttons
-    
-    # Button styling with hover effects
+    # Minus button
+    minus_rect = pygame.Rect(button_x, y - 3, 30, 30)
     minus_hover = minus_rect.collidepoint(mouse_pos)
+    minus_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
+    
+    if minus_hover:
+        pygame.draw.rect(minus_surface, (255, 100, 100, 180), (0, 0, 30, 30), border_radius=8)
+        pygame.draw.rect(minus_surface, ERROR_COLOR, (0, 0, 30, 30), 2, border_radius=8)
+    else:
+        pygame.draw.rect(minus_surface, (255, 255, 255, 15), (0, 0, 30, 30), border_radius=8)
+        pygame.draw.rect(minus_surface, (140, 70, 70), (0, 0, 30, 30), 2, border_radius=8)
+    
+    screen.blit(minus_surface, (minus_rect.x, minus_rect.y))
+    
+    # Plus button
+    plus_rect = pygame.Rect(button_x + 36, y - 3, 30, 30)
     plus_hover = plus_rect.collidepoint(mouse_pos)
+    plus_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
     
-    minus_color = (200, 100, 100) if minus_hover else (140, 70, 70)
-    plus_color = (100, 200, 100) if plus_hover else (70, 140, 70)
+    if plus_hover:
+        pygame.draw.rect(plus_surface, (100, 255, 100, 180), (0, 0, 30, 30), border_radius=8)
+        pygame.draw.rect(plus_surface, SUCCESS_COLOR, (0, 0, 30, 30), 2, border_radius=8)
+    else:
+        pygame.draw.rect(plus_surface, (255, 255, 255, 15), (0, 0, 30, 30), border_radius=8)
+        pygame.draw.rect(plus_surface, (70, 140, 70), (0, 0, 30, 30), 2, border_radius=8)
     
-    pygame.draw.rect(screen, minus_color, minus_rect, border_radius=5)
-    pygame.draw.rect(screen, plus_color, plus_rect, border_radius=5)
+    screen.blit(plus_surface, (plus_rect.x, plus_rect.y))
     
-    # Button text
-    minus_text = fonts['small'].render("−", True, (255, 255, 255))
-    plus_text = fonts['small'].render("+", True, (255, 255, 255))
+    # Button symbols
+    minus_text = fonts['text'].render("−", True, (255, 255, 255))
+    plus_text = fonts['text'].render("+", True, (255, 255, 255))
     
     minus_text_rect = minus_text.get_rect(center=minus_rect.center)
     plus_text_rect = plus_text.get_rect(center=plus_rect.center)
     
     screen.blit(minus_text, minus_text_rect)
     screen.blit(plus_text, plus_text_rect)
-
-def draw_enhanced_toggle_setting(screen, fonts, label, value, x, y, mouse_pos, setting_key, description):
-    """Enhanced toggle setting with switch positioned right next to the label text"""
-    max_width = WIDTH // 2 - 60
     
-    # Main label
-    if fonts['text'].size(label)[0] > max_width - 100:
-        while fonts['text'].size(label + "...")[0] > max_width - 100 and len(label) > 10:
-            label = label[:-1]
-        label += "..."
-    
-    draw_text_with_shadow(screen, fonts['text'], label, MENU_TEXT_COLOR, x, y)
-    
-    # Toggle switch positioned right after the label text
-    label_width = fonts['text'].size(label)[0]
-    switch_x = x + label_width + 15  # Small gap after label text
-    switch_rect = pygame.Rect(switch_x, y + 2, 55, 22)
-    
-    # Description text - positioned below and truncated to use full width
-    desc_max_width = max_width - 10  # Use full width but leave margin  
+    # Description with better positioning
+    desc_max_width = max_width - 20
     if fonts['small'].size(description)[0] > desc_max_width:
         while fonts['small'].size(description + "...")[0] > desc_max_width and len(description) > 8:
             description = description[:-1]
         description += "..."
     
-    desc_text = fonts['small'].render(description, True, (160, 160, 165))
-    screen.blit(desc_text, (x, y + 30))  # Move further down to avoid switch
+    draw_text_with_shadow(screen, fonts['small'], description, (160, 160, 165), x, y + 35, (0, 0, 0, 80), 1)
+
+def draw_modern_toggle_setting(screen, fonts, label, value, x, y, mouse_pos, setting_key, description, icon):
+    """Modern toggle setting with glass-morphism design and icon"""
+    max_width = WIDTH // 2 - 80
     
-    # Draw the toggle switch
-    switch_color = SUCCESS_COLOR if value else (120, 120, 125)
+    # Setting container with glass effect
+    container_rect = pygame.Rect(x - 5, y - 5, max_width, 45)
+    container_surface = pygame.Surface((container_rect.width, container_rect.height), pygame.SRCALPHA)
+    pygame.draw.rect(container_surface, (255, 255, 255, 8), (0, 0, container_rect.width, container_rect.height), border_radius=8)
+    pygame.draw.rect(container_surface, (120, 120, 125, 40), (0, 0, container_rect.width, container_rect.height), 1, border_radius=8)
+    screen.blit(container_surface, (container_rect.x, container_rect.y))
+    
+    # Icon and label
+    draw_text_with_shadow(screen, fonts['small'], icon, ACCENT_COLOR, x, y, (0, 0, 0, 100), 1)
+    
+    if fonts['text'].size(label)[0] > max_width - 120:
+        while fonts['text'].size(label + "...")[0] > max_width - 120 and len(label) > 10:
+            label = label[:-1]
+        label += "..."
+    
+    draw_text_with_shadow(screen, fonts['text'], label, MENU_TEXT_COLOR, x + 25, y, (0, 0, 0, 100), 1)
+    
+    # Modern toggle switch
+    label_width = fonts['text'].size(label)[0]
+    switch_x = x + label_width + 40
+    switch_rect = pygame.Rect(switch_x, y + 2, 60, 26)
+    
+    # Switch background with glass effect
+    switch_surface = pygame.Surface((60, 26), pygame.SRCALPHA)
+    switch_color = SUCCESS_COLOR if value else (100, 100, 105)
     
     if switch_rect.collidepoint(mouse_pos):
-        switch_color = tuple(min(255, c + 30) for c in switch_color)
+        switch_color = tuple(min(255, c + 40) for c in switch_color)
     
-    # Draw switch background
-    pygame.draw.rect(screen, switch_color, switch_rect, border_radius=11)
-    pygame.draw.rect(screen, (255, 255, 255, 80), switch_rect, 1, border_radius=11)
+    pygame.draw.rect(switch_surface, (*switch_color, 180), (0, 0, 60, 26), border_radius=13)
+    pygame.draw.rect(switch_surface, (255, 255, 255, 60), (0, 0, 60, 26), 2, border_radius=13)
+    screen.blit(switch_surface, (switch_rect.x, switch_rect.y))
     
-    # Switch knob
-    knob_x = switch_x + 32 if value else switch_x + 3
-    knob_rect = pygame.Rect(knob_x, y + 4, 18, 18)
+    # Switch knob with shadow
+    knob_x = switch_x + 35 if value else switch_x + 5
+    knob_rect = pygame.Rect(knob_x, y + 4, 22, 22)
+    
+    # Knob shadow
+    shadow_surface = pygame.Surface((24, 24), pygame.SRCALPHA)
+    pygame.draw.ellipse(shadow_surface, (0, 0, 0, 60), (0, 0, 24, 24))
+    screen.blit(shadow_surface, (knob_x + 1, y + 5))
+    
+    # Main knob
     pygame.draw.ellipse(screen, (255, 255, 255), knob_rect)
     pygame.draw.ellipse(screen, (200, 200, 200), knob_rect, 1)
     
-    # Status text positioned right after the switch
+    # Status indicator
     status_color = SUCCESS_COLOR if value else (160, 160, 165)
-    status_text = fonts['small'].render("ON" if value else "OFF", True, status_color)
-    status_x = switch_x + 65
-    screen.blit(status_text, (status_x, y + 6))
+    status_text = "ON" if value else "OFF"
+    status_x = switch_x + 70
+    draw_text_with_shadow(screen, fonts['small'], status_text, status_color, status_x, y + 6, (0, 0, 0, 80), 1)
+    
+    # Description
+    desc_max_width = max_width - 20
+    if fonts['small'].size(description)[0] > desc_max_width:
+        while fonts['small'].size(description + "...")[0] > desc_max_width and len(description) > 8:
+            description = description[:-1]
+        description += "..."
+    
+    draw_text_with_shadow(screen, fonts['small'], description, (160, 160, 165), x + 25, y + 25, (0, 0, 0, 80), 1)
 
-def draw_premium_button(screen, font, text, x, y, width, height, mouse_pos, button_id, base_color):
-    """Draw a premium-styled button with better visual feedback"""
+def draw_modern_button(screen, font, text, x, y, width, height, mouse_pos, button_id, base_color):
+    """Modern button with glass-morphism design and enhanced hover effects"""
     button_rect = pygame.Rect(x, y, width, height)
     is_hovered = button_rect.collidepoint(mouse_pos)
     
-    # Color variations
+    # Button surface with glass effect
+    button_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+    
     if is_hovered:
-        bg_color = tuple(min(255, c + 40) for c in base_color)
-        border_color = (255, 255, 255)
+        # Hover state with brighter glass effect
+        pygame.draw.rect(button_surface, (*base_color, 200), (0, 0, width, height), border_radius=12)
+        pygame.draw.rect(button_surface, (255, 255, 255, 80), (0, 0, width, height//2), border_radius=12)  # Top highlight
+        pygame.draw.rect(button_surface, (255, 255, 255), (0, 0, width, height), 3, border_radius=12)  # Border
         text_color = (255, 255, 255)
+        shadow_color = (0, 0, 0, 150)
     else:
-        bg_color = base_color
-        border_color = tuple(min(255, c + 60) for c in base_color)
+        # Normal state
+        pygame.draw.rect(button_surface, (*base_color, 160), (0, 0, width, height), border_radius=12)
+        pygame.draw.rect(button_surface, (255, 255, 255, 40), (0, 0, width, height//2), border_radius=12)  # Top highlight
+        pygame.draw.rect(button_surface, tuple(min(255, c + 60) for c in base_color), (0, 0, width, height), 2, border_radius=12)  # Border
         text_color = (240, 240, 240)
+        shadow_color = (0, 0, 0, 100)
     
-    # Draw button with gradient effect
-    pygame.draw.rect(screen, bg_color, button_rect, border_radius=8)
+    screen.blit(button_surface, (button_rect.x, button_rect.y))
     
-    # Add highlight on top
-    highlight_rect = pygame.Rect(x, y, width, height // 3)
-    highlight_color = tuple(min(255, c + 20) for c in bg_color)
-    pygame.draw.rect(screen, highlight_color, highlight_rect, border_radius=8)
+    # Button text with enhanced shadow
+    text_width = font.size(text)[0]
+    text_x = x + width//2 - text_width//2
+    text_y = y + height//2 - font.size(text)[1]//2
     
-    # Border
-    pygame.draw.rect(screen, border_color, button_rect, 2, border_radius=8)
-    
-    # Button text with shadow
-    draw_text_with_shadow(screen, font, text, text_color, 
-                         x + width//2 - font.size(text)[0]//2, 
-                         y + height//2 - font.size(text)[1]//2,
-                         (0, 0, 0), 1)
+    draw_text_with_shadow(screen, font, text, text_color, text_x, text_y, shadow_color, 2)
 
 def draw_side_panel(screen, settings, captured_white, captured_black, move_history, ai, board):
-    """Enhanced side panel with better spacing and contrast to prevent overlaps"""
+    """Enhanced side panel with modern glass-morphism styling and better visual hierarchy"""
     fonts = get_fonts()
     panel_rect = pygame.Rect(BOARD_WIDTH, BOARD_Y_OFFSET, SIDE_PANEL_WIDTH, BOARD_HEIGHT)
-    draw_gradient_rect(screen, SIDE_PANEL_BG, (20, 20, 25), panel_rect)  # Better gradient for contrast
     
-    # Panel border with accent
+    # Glass-morphism background with gradient
+    gradient_surface = pygame.Surface((SIDE_PANEL_WIDTH, BOARD_HEIGHT), pygame.SRCALPHA)
+    for y in range(BOARD_HEIGHT):
+        alpha = int(160 + 20 * (y / BOARD_HEIGHT))  # Subtle alpha gradient
+        color = (*SIDE_PANEL_BG, min(255, alpha))
+        pygame.draw.line(gradient_surface, color, (0, y), (SIDE_PANEL_WIDTH, y))
+    screen.blit(gradient_surface, (BOARD_WIDTH, BOARD_Y_OFFSET))
+    
+    # Modern panel border with accent
     pygame.draw.line(screen, ACCENT_COLOR, (BOARD_WIDTH, BOARD_Y_OFFSET), 
-                    (BOARD_WIDTH, BOARD_Y_OFFSET + BOARD_HEIGHT), 3)
+                    (BOARD_WIDTH, BOARD_Y_OFFSET + BOARD_HEIGHT), 4)
     
-    # Game status section with better spacing and contrast
-    status_y = BOARD_Y_OFFSET + 10
+    # Subtle inner border
+    pygame.draw.line(screen, (255, 255, 255, 30), (BOARD_WIDTH + 4, BOARD_Y_OFFSET + 10), 
+                    (BOARD_WIDTH + 4, BOARD_Y_OFFSET + BOARD_HEIGHT - 10), 1)
     
-    # Status background - enhanced for better readability
-    status_bg = pygame.Rect(BOARD_WIDTH + 5, status_y - 5, SIDE_PANEL_WIDTH - 10, 75)  # Slightly taller
-    pygame.draw.rect(screen, (50, 50, 55), status_bg, border_radius=8)
-    pygame.draw.rect(screen, ACCENT_COLOR, status_bg, 2, border_radius=8)  # Border for definition
+    # Game status section with enhanced styling
+    status_y = BOARD_Y_OFFSET + 20
     
+    # Modern status card with glass effect
+    status_bg = pygame.Rect(BOARD_WIDTH + 12, status_y - 8, SIDE_PANEL_WIDTH - 24, 85)
+    status_surface = pygame.Surface((status_bg.width, status_bg.height), pygame.SRCALPHA)
+    pygame.draw.rect(status_surface, (255, 255, 255, 20), (0, 0, status_bg.width, status_bg.height), border_radius=12)
+    pygame.draw.rect(status_surface, ACCENT_COLOR, (0, 0, status_bg.width, status_bg.height), 2, border_radius=12)
+    screen.blit(status_surface, (status_bg.x, status_bg.y))
+    
+    # Status content with better hierarchy
     if board.is_game_over():
         if board.is_checkmate():
             winner = "White" if board.turn == chess.BLACK else "Black"
             status_text = f"🏆 {winner} Wins!"
-            status_color = (255, 215, 0)
+            status_color = WARNING_COLOR
             subtitle = "Checkmate!"
+            status_icon = "👑"
         else:
-            status_text = "🤝 Draw!"
+            status_text = "🤝 Draw Game"
             status_color = (200, 200, 200)
             subtitle = "Game drawn"
+            status_icon = "⚖️"
     else:
         turn = "White" if board.turn == chess.WHITE else "Black"
         if board.turn == chess.BLACK and ai and ai.thinking:
-            status_text = "🤔 AI Thinking"
+            status_text = "🤖 AI Computing"
             status_color = ACCENT_COLOR
             adaptive_depth = ai.get_adaptive_depth(board) if hasattr(ai, 'get_adaptive_depth') else ai.search_depth 
-            subtitle = f"Depth {adaptive_depth} • {ai.get_strength_description()}"
+            subtitle = f"Analyzing depth {adaptive_depth}"
+            status_icon = "⚡"
         else:
-            status_text = f"▶️ {turn}'s Turn"
-            status_color = (255, 255, 255) if board.turn == chess.WHITE else (220, 220, 220)
+            status_text = f"▶️ {turn} to Move"
+            status_color = SUCCESS_COLOR if board.turn == chess.WHITE else MENU_TEXT_COLOR
             subtitle = "Make your move!"
+            status_icon = "♟️" if board.turn == chess.BLACK else "♙"
     
-    # Ensure status text fits
-    if fonts['heading'].size(status_text)[0] > SIDE_PANEL_WIDTH - 20:
-        while fonts['heading'].size(status_text)[0] > SIDE_PANEL_WIDTH - 20 and len(status_text) > 8:
+    # Icon and main status
+    icon_x = BOARD_WIDTH + 20
+    draw_text_with_shadow(screen, fonts['heading'], status_icon, status_color, icon_x, status_y + 5, (0, 0, 0, 100), 2)
+    
+    text_x = icon_x + 35
+    if fonts['text'].size(status_text)[0] > SIDE_PANEL_WIDTH - 60:
+        while fonts['text'].size(status_text)[0] > SIDE_PANEL_WIDTH - 60 and len(status_text) > 8:
             status_text = status_text[:-1]
         status_text += "..."
     
-    # Main status with better shadow
-    draw_text_with_shadow(screen, fonts['heading'], status_text, status_color, 
-                         BOARD_WIDTH + 10, status_y + 8, (0, 0, 0), 2)
+    draw_text_with_shadow(screen, fonts['text'], status_text, status_color, text_x, status_y + 8, (0, 0, 0, 100), 2)
     
-    # Subtitle with better contrast
-    if fonts['text'].size(subtitle)[0] > SIDE_PANEL_WIDTH - 20:  # Changed from small to text font
-        while fonts['text'].size(subtitle)[0] > SIDE_PANEL_WIDTH - 20 and len(subtitle) > 5:
+    # Subtitle with better spacing
+    if fonts['small'].size(subtitle)[0] > SIDE_PANEL_WIDTH - 60:
+        while fonts['small'].size(subtitle)[0] > SIDE_PANEL_WIDTH - 60 and len(subtitle) > 5:
             subtitle = subtitle[:-1]
         subtitle += "..."
     
-    draw_text_with_shadow(screen, fonts['text'], subtitle, (190, 190, 195), 
-                         BOARD_WIDTH + 10, status_y + 35, (0, 0, 0), 1)  # Better shadow
+    draw_text_with_shadow(screen, fonts['small'], subtitle, (190, 190, 195), text_x, status_y + 35, (0, 0, 0, 80), 1)
     
     # Check warning with enhanced visibility
     if not board.is_game_over() and board.is_check():
-        draw_text_with_shadow(screen, fonts['text'], "⚠️ CHECK!", ERROR_COLOR, 
-                             BOARD_WIDTH + 10, status_y + 55, (0, 0, 0), 2)
-    
-    # Calculate available space for captured pieces and move history
-    available_start = status_y + 90  # More space after status section
-    available_height = BOARD_HEIGHT - 100  # Total available height
-    
-    # If both features are enabled, split the space
-    if settings['show_captured_pieces'] and settings['show_move_history']:
-        captured_height = min(available_height // 2, 150)  # Max 150px for captured
-        history_height = available_height - captured_height - 20  # Rest for history with padding
+        check_bg = pygame.Rect(BOARD_WIDTH + 12, status_y + 58, SIDE_PANEL_WIDTH - 24, 25)
+        check_surface = pygame.Surface((check_bg.width, check_bg.height), pygame.SRCALPHA)
+        pygame.draw.rect(check_surface, (*ERROR_COLOR, 40), (0, 0, check_bg.width, check_bg.height), border_radius=6)
+        screen.blit(check_surface, (check_bg.x, check_bg.y))
         
-        draw_enhanced_captured_pieces(screen, fonts, captured_white, captured_black, images, 
-                                    settings, available_start, captured_height)
-        draw_enhanced_move_history(screen, fonts, move_history, settings, 
-                                 available_start + captured_height + 20, history_height)
+        draw_text_with_shadow(screen, fonts['small'], "⚠️ CHECK!", ERROR_COLOR, 
+                             BOARD_WIDTH + 20, status_y + 62, (0, 0, 0, 120), 2)
+    
+    # Content area with proper spacing
+    content_start = status_y + 100
+    available_height = BOARD_HEIGHT - 120
+    
+    # Smart content layout
+    if settings['show_captured_pieces'] and settings['show_move_history']:
+        # Split space 60/40 for captured pieces and move history
+        captured_height = min(int(available_height * 0.6), 200)
+        history_height = available_height - captured_height - 20
+        
+        draw_modern_captured_pieces(screen, fonts, captured_white, captured_black, images, 
+                                  settings, content_start, captured_height)
+        draw_modern_move_history(screen, fonts, move_history, settings, 
+                               content_start + captured_height + 20, history_height)
     
     elif settings['show_captured_pieces']:
-        # Give all space to captured pieces
-        draw_enhanced_captured_pieces(screen, fonts, captured_white, captured_black, images, 
-                                    settings, available_start, available_height)
+        draw_modern_captured_pieces(screen, fonts, captured_white, captured_black, images, 
+                                  settings, content_start, available_height)
     
     elif settings['show_move_history']:
-        # Give all space to move history  
-        draw_enhanced_move_history(screen, fonts, move_history, settings, 
-                                 available_start, available_height)
+        draw_modern_move_history(screen, fonts, move_history, settings, 
+                               content_start, available_height)
 
-def draw_enhanced_captured_pieces(screen, fonts, captured_white, captured_black, images, settings, start_y, max_height):
-    """Enhanced captured pieces with controlled height and better readability"""
-    if max_height < 50:  # Not enough space
+def draw_modern_captured_pieces(screen, fonts, captured_white, captured_black, images, settings, start_y, max_height):
+    """Modern captured pieces with glass-morphism cards and enhanced readability"""
+    if max_height < 60:  # Not enough space
         return
         
     current_y = start_y
     
-    # Section header with better styling
-    header_bg = pygame.Rect(BOARD_WIDTH + 5, current_y - 5, SIDE_PANEL_WIDTH - 10, 30)  # Taller header
-    pygame.draw.rect(screen, (55, 55, 60), header_bg, border_radius=5)
-    pygame.draw.rect(screen, WARNING_COLOR, header_bg, 1, border_radius=5)  # Border for definition
+    # Modern section header with glass card
+    header_card = pygame.Rect(BOARD_WIDTH + 12, current_y - 5, SIDE_PANEL_WIDTH - 24, 38)
+    header_surface = pygame.Surface((header_card.width, header_card.height), pygame.SRCALPHA)
+    pygame.draw.rect(header_surface, (255, 255, 255, 15), (0, 0, header_card.width, header_card.height), border_radius=8)
+    pygame.draw.rect(header_surface, WARNING_COLOR, (0, 0, header_card.width, header_card.height), 2, border_radius=8)
+    screen.blit(header_surface, (header_card.x, header_card.y))
     
-    draw_text_with_shadow(screen, fonts['text'], "📦 Captured Pieces", 
-                         WARNING_COLOR, BOARD_WIDTH + 10, current_y + 2, (0, 0, 0), 2)
-    current_y += 35
+    # Header with icon and improved typography
+    draw_text_with_shadow(screen, fonts['small'], "🎯", WARNING_COLOR, BOARD_WIDTH + 20, current_y + 2, (0, 0, 0, 100), 2)
+    draw_text_with_shadow(screen, fonts['text'], "Captured Pieces", WARNING_COLOR, BOARD_WIDTH + 45, current_y + 5, (0, 0, 0, 100), 2)
+    current_y += 45
     
-    remaining_height = max_height - 35
-    pieces_per_row = (SIDE_PANEL_WIDTH - 20) // 28  # Slightly more space per piece
+    remaining_height = max_height - 45
+    pieces_per_row = (SIDE_PANEL_WIDTH - 40) // 32  # Better spacing
     
-    # White pieces (limit display if needed) with better styling
-    if captured_white and current_y < start_y + max_height - 35:
-        # Label with background for better visibility
-        label_bg = pygame.Rect(BOARD_WIDTH + 5, current_y - 2, SIDE_PANEL_WIDTH - 10, 22)
-        pygame.draw.rect(screen, (45, 45, 50), label_bg, border_radius=3)
+    # White pieces captured by Black
+    if captured_white and current_y < start_y + max_height - 40:
+        # Subsection card
+        white_card = pygame.Rect(BOARD_WIDTH + 12, current_y - 3, SIDE_PANEL_WIDTH - 24, 28)
+        white_surface = pygame.Surface((white_card.width, white_card.height), pygame.SRCALPHA)
+        pygame.draw.rect(white_surface, (0, 0, 0, 20), (0, 0, white_card.width, white_card.height), border_radius=6)
+        screen.blit(white_surface, (white_card.x, white_card.y))
         
-        draw_text_with_shadow(screen, fonts['text'], "Taken by Black:", (220, 220, 225), 
-                             BOARD_WIDTH + 10, current_y, (0, 0, 0), 1)
-        current_y += 25
+        draw_text_with_shadow(screen, fonts['small'], "⚫ Taken by Black:", (220, 220, 225), 
+                             BOARD_WIDTH + 18, current_y + 2, (0, 0, 0, 100), 1)
+        current_y += 32
         
-        x_offset = BOARD_WIDTH + 10
+        x_offset = BOARD_WIDTH + 18
         piece_count = 0
         
         for piece_type, count in captured_white.items():
@@ -1719,44 +1892,48 @@ def draw_enhanced_captured_pieces(screen, fonts, captured_white, captured_black,
             
             for i in range(display_count):
                 if piece_count >= pieces_per_row:
-                    x_offset = BOARD_WIDTH + 10
-                    current_y += 28
+                    x_offset = BOARD_WIDTH + 18
+                    current_y += 34
                     piece_count = 0
-                    if current_y > start_y + max_height - 28:
+                    if current_y > start_y + max_height - 32:
                         break
                 
-                # Enhanced piece background with border
-                piece_bg = pygame.Rect(x_offset - 2, current_y - 2, 26, 26)  # Slightly larger
-                pygame.draw.rect(screen, (70, 70, 75), piece_bg, border_radius=3)
-                pygame.draw.rect(screen, (100, 100, 105), piece_bg, 1, border_radius=3)
+                # Modern piece card with subtle glow
+                piece_card = pygame.Rect(x_offset - 3, current_y - 3, 30, 30)
+                piece_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
+                pygame.draw.rect(piece_surface, (255, 255, 255, 25), (0, 0, 30, 30), border_radius=6)
+                pygame.draw.rect(piece_surface, (120, 120, 125), (0, 0, 30, 30), 1, border_radius=6)
+                screen.blit(piece_surface, (piece_card.x, piece_card.y))
                 
                 if symbol in images and images[symbol]:
-                    piece_img = pygame.transform.scale(images[symbol], (20, 20))
-                    screen.blit(piece_img, (x_offset + 1, current_y + 1))
+                    piece_img = pygame.transform.scale(images[symbol], (24, 24))
+                    screen.blit(piece_img, (x_offset, current_y))
                 else:
-                    text = fonts['small'].render(PIECE_SYMBOLS[symbol], True, (255, 255, 255))
-                    text_rect = text.get_rect(center=(x_offset + 11, current_y + 11))
+                    text = fonts['small'].render(PIECE_SYMBOLS[symbol], True, (248, 250, 252))
+                    text_rect = text.get_rect(center=(x_offset + 12, current_y + 12))
                     screen.blit(text, text_rect)
                 
-                x_offset += 28
+                x_offset += 34
                 piece_count += 1
             
-            if current_y > start_y + max_height - 28:
+            if current_y > start_y + max_height - 32:
                 break
         
-        current_y += 35
+        current_y += 42
     
-    # Black pieces with better styling
-    if captured_black and current_y < start_y + max_height - 35:
-        # Label with background for better visibility
-        label_bg = pygame.Rect(BOARD_WIDTH + 5, current_y - 2, SIDE_PANEL_WIDTH - 10, 22)
-        pygame.draw.rect(screen, (45, 45, 50), label_bg, border_radius=3)
+    # Black pieces captured by White
+    if captured_black and current_y < start_y + max_height - 40:
+        # Subsection card
+        black_card = pygame.Rect(BOARD_WIDTH + 12, current_y - 3, SIDE_PANEL_WIDTH - 24, 28)
+        black_surface = pygame.Surface((black_card.width, black_card.height), pygame.SRCALPHA)
+        pygame.draw.rect(black_surface, (0, 0, 0, 20), (0, 0, black_card.width, black_card.height), border_radius=6)
+        screen.blit(black_surface, (black_card.x, black_card.y))
         
-        draw_text_with_shadow(screen, fonts['text'], "Taken by White:", (220, 220, 225), 
-                             BOARD_WIDTH + 10, current_y, (0, 0, 0), 1)
-        current_y += 25
+        draw_text_with_shadow(screen, fonts['small'], "⚪ Taken by White:", (220, 220, 225), 
+                             BOARD_WIDTH + 18, current_y + 2, (0, 0, 0, 100), 1)
+        current_y += 32
         
-        x_offset = BOARD_WIDTH + 10
+        x_offset = BOARD_WIDTH + 18
         piece_count = 0
         
         for piece_type, count in captured_black.items():
@@ -1765,92 +1942,118 @@ def draw_enhanced_captured_pieces(screen, fonts, captured_white, captured_black,
             
             for i in range(display_count):
                 if piece_count >= pieces_per_row:
-                    x_offset = BOARD_WIDTH + 10
-                    current_y += 28
+                    x_offset = BOARD_WIDTH + 18
+                    current_y += 34
                     piece_count = 0
-                    if current_y > start_y + max_height - 28:
+                    if current_y > start_y + max_height - 32:
                         break
                 
-                # Enhanced piece background with border
-                piece_bg = pygame.Rect(x_offset - 2, current_y - 2, 26, 26)  # Slightly larger
-                pygame.draw.rect(screen, (70, 70, 75), piece_bg, border_radius=3)
-                pygame.draw.rect(screen, (100, 100, 105), piece_bg, 1, border_radius=3)
+                # Modern piece card with subtle glow
+                piece_card = pygame.Rect(x_offset - 3, current_y - 3, 30, 30)
+                piece_surface = pygame.Surface((30, 30), pygame.SRCALPHA)
+                pygame.draw.rect(piece_surface, (255, 255, 255, 25), (0, 0, 30, 30), border_radius=6)
+                pygame.draw.rect(piece_surface, (120, 120, 125), (0, 0, 30, 30), 1, border_radius=6)
+                screen.blit(piece_surface, (piece_card.x, piece_card.y))
                 
                 if symbol in images and images[symbol]:
-                    piece_img = pygame.transform.scale(images[symbol], (20, 20))
-                    screen.blit(piece_img, (x_offset + 1, current_y + 1))
+                    piece_img = pygame.transform.scale(images[symbol], (24, 24))
+                    screen.blit(piece_img, (x_offset, current_y))
                 else:
-                    text = fonts['small'].render(PIECE_SYMBOLS[symbol], True, (0, 0, 0))
-                    text_rect = text.get_rect(center=(x_offset + 11, current_y + 11))
-                    # Add white outline for black pieces for better visibility
-                    outline_positions = [(-1, -1), (-1, 1), (1, -1), (1, 1)]
-                    for dx, dy in outline_positions:
-                        outline_text = fonts['small'].render(PIECE_SYMBOLS[symbol], True, (255, 255, 255))
+                    # Enhanced fallback with better contrast
+                    text = fonts['small'].render(PIECE_SYMBOLS[symbol], True, (15, 23, 42))
+                    text_rect = text.get_rect(center=(x_offset + 12, current_y + 12))
+                    # White outline for better visibility
+                    for dx, dy in [(-1, -1), (-1, 1), (1, -1), (1, 1)]:
+                        outline_text = fonts['small'].render(PIECE_SYMBOLS[symbol], True, (248, 250, 252))
                         screen.blit(outline_text, (text_rect.x + dx, text_rect.y + dy))
                     screen.blit(text, text_rect)
                 
-                x_offset += 28
+                x_offset += 34
                 piece_count += 1
             
-            if current_y > start_y + max_height - 28:
+            if current_y > start_y + max_height - 32:
                 break
 
-def draw_enhanced_move_history(screen, fonts, move_history, settings, start_y, max_height):
-    """Enhanced move history with controlled height and better readability"""
-    if max_height < 50 or not move_history:
+def draw_modern_move_history(screen, fonts, move_history, settings, start_y, max_height):
+    """Modern move history with glass-morphism cards and enhanced readability"""
+    if max_height < 60 or not move_history:
         return
         
     current_y = start_y
     
-    # Section header with better styling
-    header_bg = pygame.Rect(BOARD_WIDTH + 5, current_y - 5, SIDE_PANEL_WIDTH - 10, 30)  # Taller header
-    pygame.draw.rect(screen, (55, 55, 60), header_bg, border_radius=5)
-    pygame.draw.rect(screen, ACCENT_COLOR, header_bg, 1, border_radius=5)  # Border for definition
+    # Modern section header with glass card
+    header_card = pygame.Rect(BOARD_WIDTH + 12, current_y - 5, SIDE_PANEL_WIDTH - 24, 38)
+    header_surface = pygame.Surface((header_card.width, header_card.height), pygame.SRCALPHA)
+    pygame.draw.rect(header_surface, (255, 255, 255, 15), (0, 0, header_card.width, header_card.height), border_radius=8)
+    pygame.draw.rect(header_surface, ACCENT_COLOR, (0, 0, header_card.width, header_card.height), 2, border_radius=8)
+    screen.blit(header_surface, (header_card.x, header_card.y))
     
-    draw_text_with_shadow(screen, fonts['text'], "📝 Move History", 
-                         ACCENT_COLOR, BOARD_WIDTH + 10, current_y + 2, (0, 0, 0), 2)
-    current_y += 35
+    # Header with icon and improved typography
+    draw_text_with_shadow(screen, fonts['small'], "📝", ACCENT_COLOR, BOARD_WIDTH + 20, current_y + 2, (0, 0, 0, 100), 2)
+    draw_text_with_shadow(screen, fonts['text'], "Move History", ACCENT_COLOR, BOARD_WIDTH + 45, current_y + 5, (0, 0, 0, 100), 2)
+    current_y += 50
     
-    # Calculate how many moves we can fit
-    remaining_height = max_height - 35
-    max_moves = max(1, remaining_height // 25)  # Each move takes ~25px (increased spacing)
+    # Calculate available space for moves
+    remaining_height = max_height - 50
+    move_height = 30  # Height per move entry
+    max_moves = max(1, remaining_height // move_height)
     
     recent_moves = move_history[-max_moves:] if len(move_history) > max_moves else move_history
     
     for i, move in enumerate(recent_moves):
-        if current_y > start_y + max_height - 25:
+        if current_y > start_y + max_height - move_height:
             break
             
         move_num = len(move_history) - len(recent_moves) + i + 1
         
-        # Enhanced alternating background
-        move_bg = pygame.Rect(BOARD_WIDTH + 5, current_y - 3, SIDE_PANEL_WIDTH - 10, 24)
-        if i % 2 == 0:
-            pygame.draw.rect(screen, (50, 50, 55), move_bg, border_radius=4)
-        else:
-            pygame.draw.rect(screen, (45, 45, 50), move_bg, border_radius=4)
-        
-        # Add subtle border for definition
-        pygame.draw.rect(screen, (70, 70, 75), move_bg, 1, border_radius=4)
+        # Modern move card with alternating styles
+        move_card = pygame.Rect(BOARD_WIDTH + 12, current_y - 2, SIDE_PANEL_WIDTH - 24, 28)
+        move_surface = pygame.Surface((move_card.width, move_card.height), pygame.SRCALPHA)
         
         if i % 2 == 0:  # White move
+            pygame.draw.rect(move_surface, (255, 255, 255, 20), (0, 0, move_card.width, move_card.height), border_radius=6)
             move_text = f"{(move_num + 1) // 2}. {move}"
-            text_color = (255, 255, 255)
-            shadow_color = (0, 0, 0)
+            text_color = SUCCESS_COLOR
+            number_color = WARNING_COLOR
         else:  # Black move
-            move_text = f"   ...{move}"  # Better formatting for black moves
-            text_color = (220, 220, 220)
-            shadow_color = (0, 0, 0)
+            pygame.draw.rect(move_surface, (0, 0, 0, 25), (0, 0, move_card.width, move_card.height), border_radius=6)
+            move_text = f"...{move}"
+            text_color = MENU_TEXT_COLOR
+            number_color = ACCENT_COLOR
         
-        # Truncate if too long with better handling
-        max_chars = 12  # Slightly more characters
-        if len(move_text) > max_chars:
-            move_text = move_text[:max_chars-2] + ".."
+        # Subtle border
+        pygame.draw.rect(move_surface, (120, 120, 125, 60), (0, 0, move_card.width, move_card.height), 1, border_radius=6)
+        screen.blit(move_surface, (move_card.x, move_card.y))
         
-        # Draw move text with shadow for better readability
-        draw_text_with_shadow(screen, fonts['text'], move_text, text_color, 
-                             BOARD_WIDTH + 10, current_y, shadow_color, 1)
-        current_y += 25  # Increased spacing
+        # Move number and notation with better spacing
+        if i % 2 == 0:  # White move - show move number
+            move_number = f"{(move_num + 1) // 2}."
+            
+            # Draw move number
+            draw_text_with_shadow(screen, fonts['mono'], move_number, number_color, 
+                                 BOARD_WIDTH + 18, current_y + 2, (0, 0, 0, 80), 1)
+            
+            # Draw move notation
+            move_notation = move
+            if fonts['text'].size(move_notation)[0] > SIDE_PANEL_WIDTH - 70:
+                while fonts['text'].size(move_notation)[0] > SIDE_PANEL_WIDTH - 70 and len(move_notation) > 3:
+                    move_notation = move_notation[:-1]
+                move_notation += ".."
+            
+            draw_text_with_shadow(screen, fonts['text'], move_notation, text_color, 
+                                 BOARD_WIDTH + 55, current_y + 2, (0, 0, 0, 80), 1)
+        else:  # Black move
+            # Draw move notation with indent
+            move_notation = move
+            if fonts['text'].size(move_notation)[0] > SIDE_PANEL_WIDTH - 50:
+                while fonts['text'].size(move_notation)[0] > SIDE_PANEL_WIDTH - 50 and len(move_notation) > 3:
+                    move_notation = move_notation[:-1]
+                move_notation += ".."
+            
+            draw_text_with_shadow(screen, fonts['text'], f"...{move_notation}", text_color, 
+                                 BOARD_WIDTH + 30, current_y + 2, (0, 0, 0, 80), 1)
+        
+        current_y += move_height
 
 def draw_top_banner(screen, font, message, is_game_over=False):
     """Enhanced top banner with better styling and readability"""
